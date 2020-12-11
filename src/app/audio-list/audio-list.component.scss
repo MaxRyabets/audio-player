@@ -1,0 +1,99 @@
+.container-audio-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #E0E0E0;
+
+  .audio-list-title {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
+
+  .wrapper-audio-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    .btn-next, .btn-prev {
+      margin-bottom: 20px;
+    }
+
+    .btn-prev {
+      color: #ffffff;
+    }
+
+    .btn-next {
+      color: #2B3244;
+    }
+
+    .audio-list {
+      display: flex;
+      align-items: center;
+
+      .sound{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 140px;
+        height: 180px;
+        margin-left: 20px;
+        margin-right: 20px;
+
+        .audio-image {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #2B3244;
+        }
+
+        .wrapper-audio-description {
+          width: 100%;
+          margin-top: 15px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .audio-description {
+            display: flex;
+            flex-direction: column;
+            font-size: 9px;
+
+            .name-of-music {
+              font-weight: bold;
+            }
+
+            .artist-name {
+              margin-top: 10px;
+            }
+          }
+
+          .btn-other-controls {
+            height: 18px;
+            width: 4px;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .audio-pagination {
+    margin-top: 30px;
+  }
+}
+
+.btn {
+  padding: unset;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
