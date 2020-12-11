@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SLIDES } from '../shared/mock-slides';
+import { Sound } from '../shared/sound';
+import { AudioService } from '../audio.service';
+import { tap } from 'rxjs/operators';
+import Swiper from 'swiper';
 
 @Component({
   selector: 'app-audio-list',
@@ -7,10 +10,20 @@ import { SLIDES } from '../shared/mock-slides';
   styleUrls: ['./audio-list.component.scss'],
 })
 export class AudioListComponent implements OnInit {
-  slides = SLIDES;
+  sounds: Sound[] = [];
   index = 0;
 
-  constructor() {}
+  constructor(private readonly audioService: AudioService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getSounds();
+    console.log('sounds', this.sounds);
+  }
+
+  private getSounds(): void {
+    this.audioService
+      .getSounds()
+      .pipe(tap((sounds: Sound[]) => (this.sounds = sounds)))
+      .subscribe();
+  }
 }
