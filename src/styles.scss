@@ -1,5 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~swiper/swiper-bundle";
+@import '~normalize.css';
+
+.container {
+  width: 100%;
+  /*width: 1140px;*/
+
+  @media only screen and (min-width: 992px) and (max-width: 1200px) {
+    width: 960px;
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    width: 720px;
+  }
+
+  @media only screen and (min-width: 576px) and (max-width: 767px) {
+    width: 540px;
+  }
+
+  @media only screen and (max-width: 575px) {
+    width: 100%;
+  }
+}
 
 .swiper-slide {
   display: flex;
