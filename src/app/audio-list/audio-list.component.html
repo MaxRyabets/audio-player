@@ -13,11 +13,11 @@
     [pagination]="{ clickable: true }"
   >
 
-    <ng-template swiperSlide>
+    <ng-template swiperSlide *ngFor="let sound of sounds; trackBy: trackByFn">
       <div class="sound">
         <div class="audio-image">
           <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
+            <img src="../../assets/images/audio-list/audio-list-play.svg" alt="play">
           </button>
         </div>
 
@@ -27,178 +27,7 @@
             <span class="artist-name">Lucienne Boyer (1930)</span>
           </div>
           <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
-          </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.png" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
-          </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.png" alt="other-controls">
+            <img src="../../assets/images/audio-list/other-controls.svg" alt="other-controls">
           </button>
         </div>
       </div>

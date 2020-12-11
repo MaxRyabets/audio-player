@@ -21,17 +21,21 @@ export class AudioListComponent implements OnInit {
     this.getSounds();
   }
 
-  private getSounds(): void {
-    this.audioService
-      .getSounds()
-      .pipe(tap((sounds: Sound[]) => (this.sounds = sounds)))
-      .subscribe();
-  }
-
   onSwiper(swiper): void {
     console.log(swiper);
   }
   onSlideChange(): void {
     console.log('slide change');
+  }
+
+  trackByFn(index, item): number {
+    return item.id;
+  }
+
+  private getSounds(): void {
+    this.audioService
+      .getSounds()
+      .pipe(tap((sounds: Sound[]) => (this.sounds = sounds)))
+      .subscribe();
   }
 }
