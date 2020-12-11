@@ -1,2 +1,48 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~swiper/swiper-bundle.css';
+@import "~swiper/swiper-bundle";
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  outline: none;
+}
+
+.swiper-button-next {
+  right: 10px;
+
+  &:after {
+    color: #2B3244;
+  }
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled
+{
+  &:after {
+    color: white;
+  }
+}
+
+.swiper-button-prev {
+  left: 10px;
+
+  &:after {
+    color: #2B3244;
+  }
+}
+
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background: #000000;
+}
+
+/*.swiper-button-next,
+.swiper-button-prev {
+  &:after {
+    content: none;
+  }
+}*/

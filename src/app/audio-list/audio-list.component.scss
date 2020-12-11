@@ -1,94 +1,78 @@
+@font-face {
+  font-family: 'RobotoLight';
+  src: url('../../assets/fonts/Roboto/Roboto-Light.ttf') format('ttf');
+  font-style: normal;
+  font-weight: 300;
+}
+
 .container-audio-list {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background: #E0E0E0;
+  height: 350px;
+  font-family: 'RobotoLight', sans-serif;
 
   .audio-list-title {
-    margin-top: 0;
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
   }
 
-  .wrapper-audio-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  .swiper-container {
+    width: 100%;
+    height: 300px;
+    margin: -50px auto 0;
 
-    .btn-next, .btn-prev {
-      margin-bottom: 20px;
+    .audio-list-title {
+      margin-top: 0;
+      margin-bottom: 30px;
     }
 
-    .btn-prev {
-      margin-right: 20px;
-      color: #ffffff;
-    }
-
-    .btn-next {
-      margin-left: 20px;
-      color: #2B3244;
-    }
-
-    .audio-list {
+    .sound{
       display: flex;
+      flex-direction: column;
       align-items: center;
+      width: 140px;
+      height: 180px;
 
-      .sound{
+      .audio-image {
+        width: 100%;
+        height: 100%;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        width: 140px;
-        height: 180px;
-        margin-left: 20px;
-        margin-right: 20px;
+        background: #2B3244;
+      }
 
-        .audio-image {
-          width: 100%;
-          height: 100%;
+      .wrapper-audio-description {
+        width: 100%;
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .audio-description {
           display: flex;
-          justify-content: center;
-          align-items: center;
-          background: #2B3244;
-        }
+          flex-direction: column;
+          font-size: 9px;
 
-        .wrapper-audio-description {
-          width: 100%;
-          margin-top: 15px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          .audio-description {
-            display: flex;
-            flex-direction: column;
-            font-size: 9px;
-
-            .name-of-music {
-              font-weight: bold;
-            }
-
-            .artist-name {
-              margin-top: 10px;
-            }
+          .name-of-music {
+            font-weight: bold;
           }
 
-          .btn-other-controls {
-            height: 18px;
-            width: 4px;
+          .artist-name {
+            margin-top: 10px;
+          }
+        }
 
-            img {
-              width: 100%;
-              height: 100%;
-            }
+        .btn-other-controls {
+          height: 18px;
+          width: 4px;
+
+          img {
+            width: 100%;
+            height: 100%;
           }
         }
       }
     }
-  }
-
-  .audio-pagination {
-    margin-top: 30px;
   }
 }
 
@@ -100,72 +84,3 @@
   cursor: pointer;
 }
 
-
-.swiper-container {
-  height: 100%;
-
-  .swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(174, 173, 173);
-  }
-}
-
-.slider-controls {
-  display: flex;
-  justify-content: center;
-}
-
-.slider-control-group {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: 20px;
-  z-index: 1000;
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-  outline: none;
-}
-
-.swiper-button-next {
-  right: 80px;
-}
-
-.swiper-button-prev{
-  left: 80px;
-}
-
-@media only screen and (max-width: 500px) {
-  .swiper-button-next {
-    right: 20px;
-  }
-
-  .swiper-button-prev{
-    left: 20px;
-  }
-
-}
-
-.slide {
-  max-width: 99%;
-  max-height: 100%
-}
-
-@media only screen and (max-width: 1024px) {
-  .icon-text {
-    display: none;
-  }
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-  &:after {
-    content: none;
-  }
-}
