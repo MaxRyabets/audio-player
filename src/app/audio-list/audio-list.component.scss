@@ -1,80 +1,68 @@
-@font-face {
-  font-family: 'RobotoLight';
-  src: url('../../assets/fonts/Roboto/Roboto-Light.ttf') format('ttf');
-  font-style: normal;
-  font-weight: 300;
+.audio-list-title {
+  display: flex;
+  justify-content: center;
 }
 
-.container-audio-list {
-  background: #E0E0E0;
-  height: 350px;
-  font-family: 'RobotoLight', sans-serif;
+.swiper-container {
+  width: 100%;
+  height: 300px;
+  margin: -50px auto 0;
 
   .audio-list-title {
-    display: flex;
-    justify-content: center;
+    margin-top: 0;
+    margin-bottom: 30px;
   }
 
-  .swiper-container {
-    width: 100%;
-    height: 300px;
-    margin: -50px auto 0;
+  .sound{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+    height: 180px;
 
-    .audio-list-title {
-      margin-top: 0;
-      margin-bottom: 30px;
+    .audio-image {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #2B3244;
     }
 
-    .sound{
+    .wrapper-audio-description {
+      width: 100%;
+      margin-top: 15px;
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      width: 140px;
-      height: 180px;
 
-      .audio-image {
-        width: 100%;
-        height: 100%;
+      .audio-description {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #2B3244;
-      }
+        flex-direction: column;
+        font-size: 9px;
 
-      .wrapper-audio-description {
-        width: 100%;
-        margin-top: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .audio-description {
-          display: flex;
-          flex-direction: column;
-          font-size: 9px;
-
-          .name-of-music {
-            font-weight: bold;
-          }
-
-          .artist-name {
-            margin-top: 10px;
-          }
+        .name-of-music {
+          font-weight: bold;
         }
 
-        .btn-other-controls {
-          height: 18px;
-          width: 4px;
+        .artist-name {
+          margin-top: 10px;
+        }
+      }
 
-          img {
-            width: 100%;
-            height: 100%;
-          }
+      .btn-other-controls {
+        height: 18px;
+        width: 4px;
+
+        img {
+          width: 100%;
+          height: 100%;
         }
       }
     }
   }
 }
+
 
 .btn {
   padding: unset;
@@ -84,3 +72,27 @@
   cursor: pointer;
 }
 
+.swiper-button-next,
+.swiper-button-prev {
+  outline: none;
+}
+
+.swiper-button-next {
+  &:after {
+    color: #2B3244;
+  }
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled
+{
+  &:after {
+    color: white;
+  }
+}
+
+.swiper-button-prev {
+  &:after {
+    color: #2B3244;
+  }
+}

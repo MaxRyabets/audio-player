@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  itunesUrl:
+    'https://itunes.apple.com/lookup?amgArtistId=468749,5723&entity=song&limit=15&sort=recent',
 };
 
 /*

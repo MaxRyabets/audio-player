@@ -1,4 +1,4 @@
-<section class="container container-audio-list">
+<section>
   <div class="audio-list-title">
     <h3>Surprise Me</h3>
   </div>
@@ -7,9 +7,8 @@
   <swiper
     [slidesPerView]="5"
     [slidesPerGroup]="5"
-    (swiper)="onSwiper($event)"
-    (slideChange)="onSlideChange()"
-    [navigation]="{}"
+    [breakpoints]="breakpoints"
+    [navigation]="true"
     [pagination]="{ clickable: true }"
   >
 
@@ -33,5 +32,4 @@
       </div>
     </ng-template>
   </swiper>
-
 </section>

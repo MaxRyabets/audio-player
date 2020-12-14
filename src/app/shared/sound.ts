@@ -1,8 +1,8 @@
 export interface Sound {
   name: string;
   title?: string;
-  description: string;
-  url?: string;
+  artistName: string;
+  previewUrl?: string;
   src?: string;
   additionalSetting?: string;
 }
