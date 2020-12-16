@@ -1,10 +1,9 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Sound} from '../shared/sound';
 import {AudioService} from '../audio.service';
-import {tap} from 'rxjs/operators';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
-import {NavigationOptions} from 'swiper/types';
 import Swiper from 'swiper';
+import {Observable} from 'rxjs';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -14,28 +13,16 @@ SwiperCore.use([Navigation, Pagination]);
   styleUrls: ['./audio-list.component.scss'],
 })
 export class AudioListComponent implements OnInit, AfterViewInit {
+  @ViewChild('swiperContainer', {read: ElementRef}) swiperContainer: ElementRef;
 
-  sounds: Sound[] = [];
+  sounds$: Observable<Sound[]>;
   index = 0;
   swiper: Swiper;
 
   constructor(private readonly audioService: AudioService) {}
 
   ngOnInit(): void {
-     this.getSounds();
-
-     this.audioService
-      .getITunesSound()
-      .pipe(
-        tap((sounds) => {
-          console.log(sounds);
-          /*sounds.forEach((sound) => {
-            console.log(sound);
-            /!*return sound.hasOwnProperty('previewUrl');*!/
-          });*/
-        })
-      )
-      .subscribe();
+    this.getSounds();
   }
 
   trackByFn(index, item): number {
@@ -43,16 +30,12 @@ export class AudioListComponent implements OnInit, AfterViewInit {
   }
 
   private getSounds(): void {
-    this.audioService
-      .getSounds()
-      .pipe(tap((sounds: Sound[]) => (this.sounds = sounds)))
-      .subscribe();
+    this.sounds$ = this.audioService.getITunesSound();
   }
 
   ngAfterViewInit(): void {
-    this.swiper = new Swiper('.swiper-container', {
-      slidesPerView: 5,
-      slidesPerGroup: 5,
+    this.swiper = new Swiper(this.swiperContainer.nativeElement, {
+      observer: true,
       pagination: {
         el: '.swiper-pagination',
         clickable: true,

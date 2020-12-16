@@ -7,11 +7,11 @@
   <!-- end audio list title -->
 
   <!-- start swiper container -->
-  <div class="swiper-container">
+  <div #swiperContainer class="swiper-container">
 
     <!-- start swiper wrapper -->
     <div class="swiper-wrapper">
-        <div class="sound swiper-slide" *ngFor="let sound of sounds; trackBy: trackByFn">
+        <div class="sound swiper-slide" *ngFor="let sound of sounds$ | async; trackBy: trackByFn">
           <div class="audio-image">
             <button class="btn btn-play">
               <img src="../../assets/images/audio-list/audio-list-play.svg" alt="play">
