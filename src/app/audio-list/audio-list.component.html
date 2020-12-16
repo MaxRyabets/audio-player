@@ -1,35 +1,47 @@
-<section>
+<section class="container-audio-list">
+
+  <!-- start audio list title -->
   <div class="audio-list-title">
     <h3>Surprise Me</h3>
   </div>
+  <!-- end audio list title -->
 
+  <!-- start swiper container -->
+  <div class="swiper-container">
 
-  <swiper
-    [slidesPerView]="5"
-    [slidesPerGroup]="5"
-    [breakpoints]="breakpoints"
-    [navigation]="true"
-    [pagination]="{ clickable: true }"
-  >
-
-    <ng-template swiperSlide *ngFor="let sound of sounds; trackBy: trackByFn">
-      <div class="sound">
-        <div class="audio-image">
-          <button class="btn btn-play">
-            <img src="../../assets/images/audio-list/audio-list-play.svg" alt="play">
-          </button>
-        </div>
-
-        <div class="wrapper-audio-description">
-          <div class="audio-description">
-            <span class="name-of-music">Parlez-Moi d'Amour</span>
-            <span class="artist-name">Lucienne Boyer (1930)</span>
+    <!-- start swiper wrapper -->
+    <div class="swiper-wrapper">
+        <div class="sound swiper-slide" *ngFor="let sound of sounds; trackBy: trackByFn">
+          <div class="audio-image">
+            <button class="btn btn-play">
+              <img src="../../assets/images/audio-list/audio-list-play.svg" alt="play">
+            </button>
           </div>
-          <button class="btn btn-other-controls">
-            <img src="../../assets/images/audio-list/other-controls.svg" alt="other-controls">
-          </button>
+
+          <div class="wrapper-audio-description">
+            <div class="audio-description">
+              <span class="name-of-music">Parlez-Moi d'Amour</span>
+              <span class="artist-name">Lucienne Boyer (1930)</span>
+            </div>
+            <button class="btn btn-other-controls">
+              <img src="../../assets/images/audio-list/other-controls.svg" alt="other-controls">
+            </button>
+          </div>
         </div>
-      </div>
-    </ng-template>
-  </swiper>
+    </div>
+    <!-- end swiper wrapper -->
+
+  </div>
+  <!-- start swiper container -->
+
+  <!-- start swiper pagination -->
+  <div class="container-pagination">
+    <div class="swiper-pagination"></div>
+  </div>
+  <!-- end swiper pagination -->
+
+  <!-- start swiper navigation buttons -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  <!-- end swiper navigation buttons -->
 </section>

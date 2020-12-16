@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Sound} from '../shared/sound';
 import {AudioService} from '../audio.service';
 import {tap} from 'rxjs/operators';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
+import {NavigationOptions} from 'swiper/types';
+import Swiper from 'swiper';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -11,34 +13,18 @@ SwiperCore.use([Navigation, Pagination]);
   templateUrl: './audio-list.component.html',
   styleUrls: ['./audio-list.component.scss'],
 })
-export class AudioListComponent implements OnInit {
-  breakpoints = {
-    320: {
-      slidesPerView: 1,
-      spaceBetween: 20,
-      slidesPerGroup: 1
-    },
-    480: {
-      slidesPerView: 3,
-      spaceBetween: 30,
-      slidesPerGroup: 3
-    },
-    640: {
-      slidesPerView: 5,
-      spaceBetween: 0,
-      slidesPerGroup: 5
-    },
-  };
+export class AudioListComponent implements OnInit, AfterViewInit {
 
   sounds: Sound[] = [];
   index = 0;
+  swiper: Swiper;
 
   constructor(private readonly audioService: AudioService) {}
 
   ngOnInit(): void {
-    this.getSounds();
+     this.getSounds();
 
-    this.audioService
+     this.audioService
       .getITunesSound()
       .pipe(
         tap((sounds) => {
@@ -61,5 +47,37 @@ export class AudioListComponent implements OnInit {
       .getSounds()
       .pipe(tap((sounds: Sound[]) => (this.sounds = sounds)))
       .subscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.swiper = new Swiper('.swiper-container', {
+      slidesPerView: 5,
+      slidesPerGroup: 5,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          slidesPerGroup: 1
+        },
+        480: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+          slidesPerGroup: 3
+        },
+        640: {
+          slidesPerView: 5,
+          spaceBetween: 30,
+          slidesPerGroup: 5
+        },
+      }
+    });
   }
 }
