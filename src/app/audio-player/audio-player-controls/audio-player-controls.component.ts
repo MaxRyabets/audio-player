@@ -26,6 +26,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
   @ViewChild('titleBtnPlay') titleBtnPlay: ElementRef;
   @ViewChild('play') play: ElementRef;
+  @ViewChild('volume') volume: ElementRef;
 
   destroy$ = new Subject();
 
@@ -42,10 +43,12 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     const titlePlayEvent$ = this.onClickTitlePlay();
     const playElementEvent$ = this.onClickPlayElement();
+    const volumeEvent$ = this.onClickVolume();
 
     merge(
       titlePlayEvent$,
-      playElementEvent$
+      playElementEvent$,
+      volumeEvent$,
     ).subscribe();
   }
 
@@ -73,6 +76,13 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       tap((event: MouseEvent) => {
         this.playPause();
       })
+    );
+  }
+
+  private onClickVolume(): Observable<MouseEvent> {
+    return fromEvent(this.volume.nativeElement, 'click').pipe(
+      takeUntil(this.destroy$),
+      tap((event: MouseEvent) => this.audio.muted = !this.audio.muted)
     );
   }
 }
