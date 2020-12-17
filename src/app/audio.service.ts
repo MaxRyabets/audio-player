@@ -13,7 +13,7 @@ interface SoundsResults {
   providedIn: 'root',
 })
 export class AudioService {
-  private readonly countSounds = 15;
+  private readonly countSounds = 20;
 
   constructor(private http: HttpClient) {}
 

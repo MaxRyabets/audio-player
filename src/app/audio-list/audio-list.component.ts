@@ -14,7 +14,7 @@ SwiperCore.use([Navigation, Pagination]);
   styleUrls: ['./audio-list.component.scss'],
 })
 export class AudioListComponent implements OnInit, AfterViewInit {
-  @ViewChild('swiperContainer', {read: ElementRef}) swiperContainer: ElementRef;
+  @ViewChild('swiperContainer') swiperContainer: ElementRef;
 
   sounds$: Observable<Sound[]>;
   index = 0;
