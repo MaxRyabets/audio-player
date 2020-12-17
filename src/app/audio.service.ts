@@ -23,8 +23,4 @@ export class AudioService {
       map((sounds: SoundsResults) => sounds.results.slice(1, this.countSounds))
     );
   }
-
-  getSounds(): Observable<Sound[]> {
-    return of(SOUNDS);
-  }
 }
