@@ -17,7 +17,6 @@ export class AudioListComponent implements OnInit, AfterViewInit {
   @Output() emitSound = new EventEmitter<Sound>();
 
   sounds$: Observable<Sound[]>;
-  index = 0;
   swiper: Swiper;
 
   constructor(private readonly audioService: AudioPlayerService) {}

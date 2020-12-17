@@ -1,4 +1,4 @@
-<section class="container-audio-list">
+<section class="container container-audio-list">
 
   <!-- start audio-player-controls list title -->
   <div class="audio-list-title">
@@ -14,10 +14,9 @@
         <div class="sound swiper-slide"
              *ngFor="let sound of sounds$ | async;
              trackBy: trackByFn"
-             (click)="onClickSound(sound)"
         >
           <div class="audio-image">
-            <button class="btn btn-play">
+            <button class="btn btn-play" (click)="onClickSound(sound)">
               <img src="../../../assets/images/audio-list/audio-list-play.svg" alt="play">
             </button>
           </div>
