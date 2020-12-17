@@ -1,9 +1,9 @@
 <section class="container container-player">
-  <app-audio-list (sounds)="getSounds($event)"></app-audio-list>
+  <app-audio-list (emitSound)="getSounds($event)"></app-audio-list>
 </section>
 
-<section class="container container-player container-audio-player">
-  <app-audio-players-controls [sounds]="sounds"></app-audio-players-controls>
+<section class="container container-player container-audio-player" *ngIf="sound">
+  <app-audio-players-controls [sound]="sound"></app-audio-players-controls>
 </section>
 
 

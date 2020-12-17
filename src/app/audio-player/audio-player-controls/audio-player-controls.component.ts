@@ -8,10 +8,14 @@ import {Sound} from '../shared/sound';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPlayerControlsComponent implements OnInit {
-  currentSounds: Sound[] = [];
+  currentSound: Sound;
 
-  @Input() set sounds(sounds: Sound[]) {
-   this.currentSounds = sounds;
+  get sound(): Sound {
+    return this.currentSound;
+  }
+
+  @Input() set sound(sound: Sound) {
+   this.currentSound = sound;
   }
 
   constructor() { }

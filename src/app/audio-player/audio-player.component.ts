@@ -8,14 +8,14 @@ import {Sound} from './shared/sound';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPlayerComponent implements OnInit {
-  sounds: Sound[] = [];
+  sound: Sound;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  getSounds(sounds: Sound[]): void {
-    this.sounds = sounds;
+  getSounds(sound: Sound): void {
+    this.sound = sound;
   }
 }
