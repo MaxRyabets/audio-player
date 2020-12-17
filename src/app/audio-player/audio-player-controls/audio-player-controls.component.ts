@@ -41,9 +41,11 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const titlePlayEvent$ = this.onClickTitlePlay();
+    const playElementEvent$ = this.onClickPlayElement();
 
     merge(
-      titlePlayEvent$
+      titlePlayEvent$,
+      playElementEvent$
     ).subscribe();
   }
 
@@ -58,6 +60,15 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   private onClickTitlePlay(): Observable<MouseEvent> {
     return fromEvent(this.titlePlayElement, 'click').pipe(
+      takeUntil(this.destroy$),
+      tap((event: MouseEvent) => {
+        this.playPause();
+      })
+    );
+  }
+
+  private onClickPlayElement(): Observable<MouseEvent> {
+    return fromEvent(this.playElement, 'click').pipe(
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
         this.playPause();
