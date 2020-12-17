@@ -8,20 +8,10 @@ import {Sound} from '../shared/sound';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPlayerControlsComponent implements OnInit {
-  currentSound: Sound;
-
-  get sound(): Sound {
-    return this.currentSound;
-  }
-
-  @Input() set sound(sound: Sound) {
-   this.currentSound = sound;
-  }
-
-  constructor() { }
+  @Input() sound;
 
   ngOnInit(): void {
-
+    console.log('test ', this.sound);
   }
 
 }

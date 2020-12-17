@@ -7,13 +7,8 @@ import {Sound} from './shared/sound';
   styleUrls: ['./audio-player.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerComponent implements OnInit {
+export class AudioPlayerComponent {
   sound: Sound;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   getSounds(sound: Sound): void {
     this.sound = sound;
