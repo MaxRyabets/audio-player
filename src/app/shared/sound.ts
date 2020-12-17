@@ -1,5 +1,5 @@
 export interface Sound {
-  name: string;
+  trackName: string;
   title?: string;
   artistName: string;
   previewUrl?: string;

@@ -4,6 +4,7 @@ import {AudioService} from '../audio.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
 import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -30,7 +31,9 @@ export class AudioListComponent implements OnInit, AfterViewInit {
   }
 
   private getSounds(): void {
-    this.sounds$ = this.audioService.getITunesSound();
+    this.sounds$ = this.audioService.getITunesSound().pipe(
+      tap(console.log)
+    );
   }
 
   ngAfterViewInit(): void {
