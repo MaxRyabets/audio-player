@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Sound} from './shared/sound';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../environments/environment';
+import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 
 interface SoundsResults {
@@ -12,7 +12,7 @@ interface SoundsResults {
 @Injectable({
   providedIn: 'root',
 })
-export class AudioService {
+export class AudioPlayerService {
   private readonly countSounds = 20;
 
   constructor(private http: HttpClient) {}

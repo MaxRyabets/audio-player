@@ -1,10 +1,10 @@
 <section class="container-audio-list">
 
-  <!-- start audio list title -->
+  <!-- start audio-player-controls list title -->
   <div class="audio-list-title">
     <h3>Surprise Me</h3>
   </div>
-  <!-- end audio list title -->
+  <!-- end audio-player-controls list title -->
 
   <!-- start swiper container -->
   <div #swiperContainer class="swiper-container">
@@ -14,7 +14,7 @@
         <div class="sound swiper-slide" *ngFor="let sound of sounds$ | async; trackBy: trackByFn">
           <div class="audio-image">
             <button class="btn btn-play">
-              <img src="../../assets/images/audio-list/audio-list-play.svg" alt="play">
+              <img src="../../../assets/images/audio-list/audio-list-play.svg" alt="play">
             </button>
           </div>
 
@@ -24,7 +24,7 @@
               <span class="artist-name">{{sound.artistName}}</span>
             </div>
             <button class="btn btn-other-controls">
-              <img src="../../assets/images/audio-list/other-controls.svg" alt="other-controls">
+              <img src="../../../assets/images/audio-list/other-controls.svg" alt="other-controls">
             </button>
           </div>
         </div>

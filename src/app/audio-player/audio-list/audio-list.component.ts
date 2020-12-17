@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Sound} from '../shared/sound';
-import {AudioService} from '../audio.service';
+import {AudioPlayerService} from '../audio-player.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
 import {Observable} from 'rxjs';
@@ -20,7 +20,7 @@ export class AudioListComponent implements OnInit, AfterViewInit {
   index = 0;
   swiper: Swiper;
 
-  constructor(private readonly audioService: AudioService) {}
+  constructor(private readonly audioService: AudioPlayerService) {}
 
   ngOnInit(): void {
     this.getSounds();
