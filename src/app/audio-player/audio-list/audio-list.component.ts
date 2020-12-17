@@ -30,6 +30,7 @@ export class AudioListComponent implements OnInit, AfterViewInit {
   }
 
   onClickSound(sound: Sound): void {
+    console.log('SOUND', sound);
     this.emitSound.emit(sound);
   }
 

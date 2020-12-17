@@ -1,15 +1,18 @@
-<section class="container audio-player">
+<section #audioPlayer class="container audio-player">
 
   <!-- start row-audio-player -->
   <article class="row-audio-player">
 
     <!-- start col-audio-player-title -->
     <section class="col-audio-player-title">
-      <img class="audio-image" src="../../../assets/images/audio-player/audio-image.svg" alt="audio-image"/>
 
-      <button class="btn audio-player-title-btn-play">
-        <img src="../../../assets/images/audio-player/audio-player-title-btn-play.svg" alt="title-btn-play"/>
-      </button>
+      <div class="container-title-img-btn">
+        <img class="audio-image" src="../../../assets/images/audio-player/audio-image.svg" alt="audio-image"/>
+
+        <button class="btn audio-player-title-btn-play" #titleBtnPlay>
+          <img src="../../../assets/images/audio-player/audio-player-title-btn-play.svg" alt="title-btn-play"/>
+        </button>
+      </div>
 
       <div class="audio-description">
         <span class="name-of-music">{{sound.trackName}}</span>
@@ -26,7 +29,7 @@
         <img src="../../../assets/images/audio-player/btn-play-prev.svg" alt="play-prev"/>
       </button>
 
-      <button class="btn btn-audio-play">
+      <button class="btn btn-audio-play" #play>
         <img src="../../../assets/images/audio-player/btn-play.svg" alt="play"/>
       </button>
 

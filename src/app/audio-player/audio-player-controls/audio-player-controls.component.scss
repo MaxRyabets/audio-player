@@ -9,24 +9,30 @@
 
     .col-audio-player-title {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      width: 240px;
+      width: 260px;
 
-      .audio-image {
-        width: 60px;
-        height: 60px;
-        background: #2B3244;
-      }
+      .container-title-img-btn {
+        display: flex;
+        align-items: center;
 
-      .audio-player-title-btn-play {
-        width: 35px;
-        height: 35px;
+        .audio-image {
+          width: 60px;
+          height: 60px;
+          background: #2B3244;
+        }
+
+        .audio-player-title-btn-play {
+          width: 35px;
+          height: 35px;
+          margin-left: 10px;
+        }
       }
 
       .audio-description {
         display: flex;
         flex-direction: column;
+        margin-left: 10px;
         font-size: 14px;
 
         .name-of-music {
