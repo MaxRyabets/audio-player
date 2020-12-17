@@ -2,6 +2,7 @@ import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, On
 import {Sound} from '../shared/sound';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
+import {Timestamp} from '../shared/timestamp';
 
 @Component({
   selector: 'app-audio-players-controls',
@@ -9,7 +10,7 @@ import {takeUntil, tap} from 'rxjs/operators';
   styleUrls: ['./audio-player-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
+export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
   currentSound: Sound;
 
   get sound(): Sound {
@@ -27,6 +28,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('titleBtnPlay') titleBtnPlay: ElementRef;
   @ViewChild('play') play: ElementRef;
   @ViewChild('volume') volume: ElementRef;
+  @ViewChild('duration') duration: ElementRef;
 
   destroy$ = new Subject();
 
@@ -40,14 +42,20 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     return this.play.nativeElement;
   }
 
+  ngOnInit(): void {
+    this.audio.volume = .75;
+  }
+
   ngAfterViewInit(): void {
     const titlePlayEvent$ = this.onClickTitlePlay();
-    const playElementEvent$ = this.onClickPlayElement();
+    const playEvent$ = this.onClickPlay();
     const volumeEvent$ = this.onClickVolume();
+    const loadedAudio$ = this.loadedAudio();
 
     merge(
+      loadedAudio$,
       titlePlayEvent$,
-      playElementEvent$,
+      playEvent$,
       volumeEvent$,
     ).subscribe();
   }
@@ -70,12 +78,10 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  private onClickPlayElement(): Observable<MouseEvent> {
+  private onClickPlay(): Observable<MouseEvent> {
     return fromEvent(this.playElement, 'click').pipe(
       takeUntil(this.destroy$),
-      tap((event: MouseEvent) => {
-        this.playPause();
-      })
+      tap((event: MouseEvent) => this.playPause())
     );
   }
 
@@ -84,5 +90,33 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => this.audio.muted = !this.audio.muted)
     );
+  }
+
+  private loadedAudio(): Observable<any> {
+    return fromEvent(this.audio, 'loadeddata').pipe(
+      takeUntil(this.destroy$),
+      tap((event) => {
+        this.duration.nativeElement.textContent = this.convertDuration(this.audio.duration);
+      })
+    );
+  }
+
+  private convertDuration(duration: number): string {
+    const audioMinutesSeconds: Timestamp = this.convertToMinutesAndSeconds(duration);
+
+    return [
+      audioMinutesSeconds.minutes.toString().padStart(2, '0'),
+      audioMinutesSeconds.seconds.toString().padStart(2, '0'),
+    ].join(':');
+  }
+
+  private convertToMinutesAndSeconds(timestamp): Timestamp {
+    const minutes = Math.floor(timestamp / 60);
+    const seconds = Math.floor(timestamp % 60);
+
+    return {
+      minutes,
+      seconds,
+    };
   }
 }
