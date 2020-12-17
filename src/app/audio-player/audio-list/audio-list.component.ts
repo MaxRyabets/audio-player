@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Output, ViewChild, EventEmitter} from '@angular/core';
 import {Sound} from '../shared/sound';
 import {AudioPlayerService} from '../audio-player.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
@@ -15,6 +15,7 @@ SwiperCore.use([Navigation, Pagination]);
 })
 export class AudioListComponent implements OnInit, AfterViewInit {
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
+  @Output() sounds = new EventEmitter<Sound[]>();
 
   sounds$: Observable<Sound[]>;
   index = 0;
@@ -26,13 +27,13 @@ export class AudioListComponent implements OnInit, AfterViewInit {
     this.getSounds();
   }
 
-  trackByFn(index, item): number {
-    return item.id;
+  trackByFn(index, sound): number {
+    return sound.id;
   }
 
   private getSounds(): void {
     this.sounds$ = this.audioService.getITunesSound().pipe(
-      tap(console.log)
+      tap(sounds => this.sounds.emit(sounds))
     );
   }
 
