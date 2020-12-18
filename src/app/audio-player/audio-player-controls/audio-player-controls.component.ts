@@ -20,7 +20,7 @@ import {Timestamp} from '../shared/timestamp';
   styleUrls: ['./audio-player-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   currentSound: Sound;
   progressBarValue = 0;
 
@@ -45,6 +45,8 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('duration') duration: ElementRef;
   @ViewChild('progressBar') progressBar: ElementRef;
   @ViewChild('currentTime') currentTime: ElementRef;
+  @ViewChild('audioVolume') audioVolume: ElementRef;
+  @ViewChild('volumePercentage') volumePercentage: ElementRef;
 
   get titlePlayElement(): HTMLElement {
     return this.titleBtnPlay.nativeElement;
@@ -61,10 +63,6 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
   constructor(private cdRef: ChangeDetectorRef) {
   }
 
-  ngOnInit(): void {
-    this.audio.volume = .75;
-  }
-
   ngAfterViewInit(): void {
     const titlePlayEvent$ = this.onClickTitlePlay();
     const playEvent$ = this.onClickPlay();
@@ -72,6 +70,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     const loadedAudio$ = this.loadedAudio();
     const progressBarEvent$ = this.clickOnProgressBar();
     const timeUpdateProgressBar$ = this.timeUpdateProgressBar();
+    const audioVolumeEvent$ = this.onClickAudioVolume();
 
     merge(
       loadedAudio$,
@@ -79,7 +78,8 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
       playEvent$,
       volumeEvent$,
       progressBarEvent$,
-      timeUpdateProgressBar$
+      timeUpdateProgressBar$,
+      audioVolumeEvent$
     ).subscribe();
   }
 
@@ -164,7 +164,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     );
   }
 
-  private timeUpdateProgressBar(): Observable<any> {
+  private timeUpdateProgressBar(): Observable<Event> {
     return fromEvent(this.audio, 'timeupdate').pipe(
       takeUntil(this.destroy$),
       tap(() => {
@@ -189,9 +189,27 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     );
   }
 
+  private onClickAudioVolume(): Observable<MouseEvent> {
+    return fromEvent(this.audioVolume.nativeElement, 'click').pipe(
+      takeUntil(this.destroy$),
+      tap((event: MouseEvent) => {
+        const audioVolumeWidth = this.audioVolume.nativeElement.offsetWidth;
+        const newVolume = event.offsetX / audioVolumeWidth;
+
+        if (newVolume < 0) {
+          return;
+        }
+
+        this.audio.volume = newVolume;
+        this.volumePercentage.nativeElement.style.width = `${newVolume * 100}%`;
+      })
+    );
+  }
+
   private resetAudioPlayer(sound: Sound): void {
     this.audio.pause();
     this.audio.src = sound.previewUrl;
     this.progressBarValue = 0;
+    this.audio.volume = 0.5;
   }
 }

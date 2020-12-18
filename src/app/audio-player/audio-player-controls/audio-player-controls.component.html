@@ -45,10 +45,8 @@
 
       <span class="audio-current-duration-time"><span #currentTime></span> / <span #duration></span> </span>
 
-      <span class="audio-control-volume">
-        <svg width="100" height="4" viewBox="0 0 100 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M100 2H0" stroke="white" stroke-width="3"/>
-        </svg>
+      <span #audioVolume class="audio-control-volume">
+        <span #volumePercentage class="volume-percentage"></span>
       </span>
 
       <button class="btn btn-volume" #volume>

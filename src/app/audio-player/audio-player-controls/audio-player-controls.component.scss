@@ -80,6 +80,16 @@
       .audio-control-volume {
         display: flex;
         align-items: center;
+        width: 100px;
+        height: 3px;
+        background: white;
+        cursor: pointer;
+
+        .volume-percentage {
+          background: #2b3244;
+          width: 50%;
+          height: 100%;
+        }
       }
     }
   }
