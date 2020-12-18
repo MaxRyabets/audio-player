@@ -36,6 +36,12 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input() set sound(sound: Sound) {
+    if (this.isCurrentSoundExist(sound)) {
+      this.playPause();
+
+      return;
+    }
+
     this.currentSound = sound;
 
     this.resetAudioPlayer(sound);
@@ -223,5 +229,9 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     this.audio.src = sound.previewUrl;
     this.progressBarValue = 0;
     this.audio.volume = 0.5;
+  }
+
+  private isCurrentSoundExist(sound: Sound): boolean {
+    return this.currentSound !== undefined && this.currentSound.id === sound.id;
   }
 }
