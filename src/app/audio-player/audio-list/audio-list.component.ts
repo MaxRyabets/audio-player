@@ -142,9 +142,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isActiveSound(soundIndex: number): string {
-    console.log('clickedId', this.clickedId);
-    console.log('this.clickedId !== soundIndex', this.clickedId !== soundIndex);
-    console.log('soundIndex', soundIndex);
     return this.clickedId !== soundIndex ? 'inactive-image' : 'active-image';
   }
 }
