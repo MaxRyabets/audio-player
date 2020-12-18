@@ -35,8 +35,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
   @Input() set sound(sound: Sound) {
     this.currentSound = sound;
 
-    this.audio.pause();
-    this.audio.src = sound.previewUrl;
+    this.resetAudioPlayer(sound);
   }
 
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
@@ -72,6 +71,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     const volumeEvent$ = this.onClickVolume();
     const loadedAudio$ = this.loadedAudio();
     const progressBarEvent$ = this.clickOnProgressBar();
+    const timeUpdateProgressBar$ = this.timeUpdateProgressBar();
 
     merge(
       loadedAudio$,
@@ -79,6 +79,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
       playEvent$,
       volumeEvent$,
       progressBarEvent$,
+      timeUpdateProgressBar$
     ).subscribe();
   }
 
@@ -151,16 +152,46 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     return fromEvent(this.progressAudio, 'click').pipe(
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
-        const percent = event.offsetX / this.progressBar.nativeElement.offsetWidth;
+        const percent = event.offsetX / this.progressAudio.offsetWidth;
 
         this.audio.currentTime = percent * this.audio.duration;
         this.progressBarValue = Math.floor(percent * 100);
         this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
 
-        const target = event.target as HTMLTextAreaElement;
-        target.innerHTML = `${this.progressBarValue}% played`;
+        this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
         this.cdRef.detectChanges();
       })
     );
+  }
+
+  private timeUpdateProgressBar(): Observable<any> {
+    return fromEvent(this.audio, 'timeupdate').pipe(
+      takeUntil(this.destroy$),
+      tap(() => {
+        if (this.audio.paused) {
+          return;
+        }
+
+        const currentTimeAudioPlayed = Math.floor(
+          (100 / this.audio.duration) * this.audio.currentTime
+        );
+
+        if (isNaN(currentTimeAudioPlayed)) {
+          return;
+        }
+
+        this.progressBarValue = currentTimeAudioPlayed;
+        this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
+
+        this.cdRef.detectChanges();
+      })
+    );
+  }
+
+  private resetAudioPlayer(sound: Sound): void {
+    this.audio.pause();
+    this.audio.src = sound.previewUrl;
+    this.progressBarValue = 0;
   }
 }
