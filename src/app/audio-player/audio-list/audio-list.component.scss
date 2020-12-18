@@ -21,13 +21,20 @@
       width: 140px;
       height: 180px;
 
+      .active-image {
+        background: red;
+      }
+
+      .inactive-image {
+        background: #2B3244;
+      }
+
       .audio-image {
         width: 100%;
         height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #2B3244;
       }
 
       .wrapper-audio-description {

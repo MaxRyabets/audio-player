@@ -15,9 +15,9 @@
              *ngFor="let sound of sounds; index as i;
              trackBy: trackByFn"
         >
-          <div class="audio-image">
+          <div [ngClass]="isActiveSound(i)" class="audio-image">
             <button class="btn btn-play" (click)="onClickSound(i, sound)">
-              <img src="../../../assets/images/audio-list/audio-list-play.svg" alt="play">
+              <img src="../../../assets/images/audio-list/title-image.svg" alt="play">
             </button>
           </div>
 

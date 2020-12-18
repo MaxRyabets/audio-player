@@ -27,6 +27,8 @@ SwiperCore.use([Navigation, Pagination]);
 })
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   sounds: Sound[] = [];
+  clickedId;
+
   destroy$ = new Subject();
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
@@ -61,6 +63,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       ...sound
     };
 
+    this.clickedId = id;
     this.emitSound.emit(soundWithId);
   }
 
@@ -134,6 +137,14 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       ...sound
     };
 
+    this.clickedId = id;
     this.emitSound.emit(soundWithId);
+  }
+
+  isActiveSound(soundIndex: number): string {
+    console.log('clickedId', this.clickedId);
+    console.log('this.clickedId !== soundIndex', this.clickedId !== soundIndex);
+    console.log('soundIndex', soundIndex);
+    return this.clickedId !== soundIndex ? 'inactive-image' : 'active-image';
   }
 }
