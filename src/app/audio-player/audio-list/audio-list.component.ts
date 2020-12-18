@@ -102,6 +102,10 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  isActiveSound(soundIndex: number): string {
+    return this.clickedId !== soundIndex ? 'inactive-image' : 'active-image';
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -139,9 +143,5 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.clickedId = id;
     this.emitSound.emit(soundWithId);
-  }
-
-  isActiveSound(soundIndex: number): string {
-    return this.clickedId !== soundIndex ? 'inactive-image' : 'active-image';
   }
 }
