@@ -42,7 +42,10 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   swiper: Swiper;
 
-  constructor(private readonly audioService: AudioPlayerService, private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private readonly audioService: AudioPlayerService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.getSounds();

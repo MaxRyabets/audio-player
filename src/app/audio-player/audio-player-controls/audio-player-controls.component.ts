@@ -3,10 +3,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, EventEmitter,
+  ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
-  OnInit, Output,
+  Output,
   ViewChild
 } from '@angular/core';
 import {Sound} from '../shared/sound';
@@ -130,6 +131,8 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       tap(() => {
         this.duration.nativeElement.textContent = this.convertDuration(this.audio.duration);
         this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
+
+        this.playPause();
       })
     );
   }
