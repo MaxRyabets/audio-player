@@ -43,7 +43,7 @@
     <!-- start col-audio-player-other-controls -->
     <section class="col-audio-player-other-controls">
 
-      <span class="audio-current-duration-time">00:15 / <span #duration></span> </span>
+      <span class="audio-current-duration-time"><span #currentTime></span> / <span #duration></span> </span>
 
       <span class="audio-control-volume">
         <svg width="100" height="4" viewBox="0 0 100 4" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,8 +65,13 @@
   </article>
   <!-- end row-audio-player -->
 
-  <article class="row-audio-player-timeline">
-
-  </article>
+  <div class="row-audio-player-progress-bar">
+    <progress
+      #progressBar
+      class="progress-bar"
+      max="100"
+      [value]="progressBarValue"
+    ></progress>
+  </div>
 
 </section>

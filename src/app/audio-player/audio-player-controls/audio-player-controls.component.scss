@@ -73,7 +73,6 @@
       width: 260px;
 
       .audio-current-duration-time {
-        width: 90px;
         font-size: 14px;
         color: #2B3244;
       }
@@ -81,6 +80,39 @@
       .audio-control-volume {
         display: flex;
         align-items: center;
+      }
+    }
+  }
+
+  .row-audio-player-progress-bar {
+    cursor: pointer;
+    position: relative;
+    height: 0;
+
+    .progress-bar {
+      width: 100%;
+      height: 3px;
+      margin-bottom: 5px;
+      margin-top: 17px;
+      border: none;
+      vertical-align: middle;
+      background: #96989e;
+    }
+
+    .progress-bar[value] {
+      &::-webkit-progress-bar {
+        background-color: rgba(117, 190, 218, 0);
+        border-radius: 2px;
+      }
+    }
+
+    .progress-bar[value] {
+      &::-webkit-progress-value {
+        background-color: #2b3244;
+        height: 3px;
+        box-sizing: unset;
+        position:absolute;
+        top: 17px;
       }
     }
   }

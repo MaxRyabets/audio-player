@@ -1,4 +1,14 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {Sound} from '../shared/sound';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
@@ -12,6 +22,11 @@ import {Timestamp} from '../shared/timestamp';
 })
 export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
   currentSound: Sound;
+  progressBarValue = 0;
+
+  destroy$ = new Subject();
+
+  audio = new Audio();
 
   get sound(): Sound {
     return this.currentSound;
@@ -29,10 +44,8 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
   @ViewChild('play') play: ElementRef;
   @ViewChild('volume') volume: ElementRef;
   @ViewChild('duration') duration: ElementRef;
-
-  destroy$ = new Subject();
-
-  audio = new Audio();
+  @ViewChild('progressBar') progressBar: ElementRef;
+  @ViewChild('currentTime') currentTime: ElementRef;
 
   get titlePlayElement(): HTMLElement {
     return this.titleBtnPlay.nativeElement;
@@ -40,6 +53,13 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
 
   get playElement(): HTMLElement {
     return this.play.nativeElement;
+  }
+
+  get progressAudio(): any {
+    return this.progressBar.nativeElement;
+  }
+
+  constructor(private cdRef: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -51,12 +71,14 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     const playEvent$ = this.onClickPlay();
     const volumeEvent$ = this.onClickVolume();
     const loadedAudio$ = this.loadedAudio();
+    const progressBarEvent$ = this.clickOnProgressBar();
 
     merge(
       loadedAudio$,
       titlePlayEvent$,
       playEvent$,
       volumeEvent$,
+      progressBarEvent$,
     ).subscribe();
   }
 
@@ -92,17 +114,22 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     );
   }
 
-  private loadedAudio(): Observable<any> {
+  private loadedAudio(): Observable<Event> {
     return fromEvent(this.audio, 'loadeddata').pipe(
       takeUntil(this.destroy$),
-      tap((event) => {
+      tap(() => {
         this.duration.nativeElement.textContent = this.convertDuration(this.audio.duration);
+        this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
       })
     );
   }
 
-  private convertDuration(duration: number): string {
-    const audioMinutesSeconds: Timestamp = this.convertToMinutesAndSeconds(duration);
+  private convertDuration(time: number): string {
+    if (time === 0) {
+      return '00:00';
+    }
+
+    const audioMinutesSeconds: Timestamp = this.convertToMinutesAndSeconds(time);
 
     return [
       audioMinutesSeconds.minutes.toString().padStart(2, '0'),
@@ -118,5 +145,22 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
       minutes,
       seconds,
     };
+  }
+
+  private clickOnProgressBar(): Observable<MouseEvent> {
+    return fromEvent(this.progressAudio, 'click').pipe(
+      takeUntil(this.destroy$),
+      tap((event: MouseEvent) => {
+        const percent = event.offsetX / this.progressBar.nativeElement.offsetWidth;
+
+        this.audio.currentTime = percent * this.audio.duration;
+        this.progressBarValue = Math.floor(percent * 100);
+        this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
+
+        const target = event.target as HTMLTextAreaElement;
+        target.innerHTML = `${this.progressBarValue}% played`;
+        this.cdRef.detectChanges();
+      })
+    );
   }
 }
