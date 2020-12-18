@@ -1,4 +1,5 @@
 export interface Sound {
+  id?: number;
   trackName: string;
   title?: string;
   artistName: string;

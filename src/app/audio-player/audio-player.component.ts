@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Sound} from './shared/sound';
 
 @Component({
@@ -9,8 +9,18 @@ import {Sound} from './shared/sound';
 })
 export class AudioPlayerComponent {
   sound: Sound;
+  currentSoundId;
 
   getSounds(sound: Sound): void {
     this.sound = sound;
+    this.currentSoundId = undefined;
+  }
+
+  nextTrack(): void {
+    this.currentSoundId = this.sound.id + 1;
+  }
+
+  prevTrack(): void {
+    this.currentSoundId = this.sound.id - 1;
   }
 }

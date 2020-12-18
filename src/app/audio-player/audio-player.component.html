@@ -1,9 +1,16 @@
 <section class="container-player container-audio-list">
-  <app-audio-list (emitSound)="getSounds($event)"></app-audio-list>
+  <app-audio-list
+    (emitSound)="getSounds($event)"
+    [currentSoundId]="currentSoundId"
+  ></app-audio-list>
 </section>
 
 <section class="container-player container-audio-player" *ngIf="sound">
-  <app-audio-players-controls [sound]="sound"></app-audio-players-controls>
+  <app-audio-players-controls
+    [sound]="sound"
+    (emitNextTrack)="nextTrack()"
+    (emitPrevTrack)="prevTrack()"
+  ></app-audio-players-controls>
 </section>
 
 

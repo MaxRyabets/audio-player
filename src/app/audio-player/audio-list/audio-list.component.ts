@@ -1,9 +1,21 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {Sound} from '../shared/sound';
 import {AudioPlayerService} from '../audio-player.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
-import {Observable} from 'rxjs';
+import {Subject} from 'rxjs';
+import {takeUntil, tap} from 'rxjs/operators';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -11,15 +23,26 @@ SwiperCore.use([Navigation, Pagination]);
   selector: 'app-audio-list',
   templateUrl: './audio-list.component.html',
   styleUrls: ['./audio-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioListComponent implements OnInit, AfterViewInit {
+export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
+  sounds: Sound[] = [];
+  destroy$ = new Subject();
+
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
   @Output() emitSound = new EventEmitter<Sound>();
 
-  sounds$: Observable<Sound[]>;
+  @Input() set currentSoundId(soundId: number) {
+    if (soundId === undefined) {
+      return;
+    }
+
+    this.emitNewSound(soundId);
+  }
+
   swiper: Swiper;
 
-  constructor(private readonly audioService: AudioPlayerService) {}
+  constructor(private readonly audioService: AudioPlayerService, private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.getSounds();
@@ -29,16 +52,17 @@ export class AudioListComponent implements OnInit, AfterViewInit {
     return sound.id;
   }
 
-  onClickSound(sound: Sound): void {
-    this.emitSound.emit(sound);
+  onClickSound(id: number, sound: Sound): void {
+    const soundWithId: Sound = {
+      id,
+      ...sound
+    };
+
+    this.emitSound.emit(soundWithId);
   }
 
   ngAfterViewInit(): void {
     this.initSwiper();
-  }
-
-  private getSounds(): void {
-    this.sounds$ = this.audioService.getITunesSound();
   }
 
   initSwiper(): void {
@@ -70,5 +94,43 @@ export class AudioListComponent implements OnInit, AfterViewInit {
         },
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private getSounds(): void {
+    this.audioService.getITunesSound().pipe(
+      takeUntil(this.destroy$),
+      tap(sounds => {
+        this.sounds = sounds;
+        this.cdRef.detectChanges();
+      })
+    ).subscribe();
+  }
+
+  private emitNewSound(soundId: number): void {
+    let sound: Sound;
+    const soundsLength = this.sounds.length;
+    let id = soundId;
+
+    if (soundsLength === soundId) {
+      id = 0;
+    }
+
+    if (soundId < 0) {
+      id = soundsLength - 1;
+    }
+
+    sound = this.sounds[id];
+
+    const soundWithId: Sound = {
+      id,
+      ...sound
+    };
+
+    this.emitSound.emit(soundWithId);
   }
 }

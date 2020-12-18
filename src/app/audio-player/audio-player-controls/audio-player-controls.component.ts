@@ -3,10 +3,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, EventEmitter,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, Output,
   ViewChild
 } from '@angular/core';
 import {Sound} from '../shared/sound';
@@ -21,6 +21,8 @@ import {Timestamp} from '../shared/timestamp';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
+  @Output() emitNextTrack = new EventEmitter<number>();
+  @Output() emitPrevTrack = new EventEmitter<number>();
   currentSound: Sound;
   progressBarValue = 0;
 
@@ -60,7 +62,14 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     return this.progressBar.nativeElement;
   }
 
-  constructor(private cdRef: ChangeDetectorRef) {
+  constructor(private cdRef: ChangeDetectorRef) {}
+
+  nextTrack(): void {
+    this.emitNextTrack.emit(this.sound.id);
+  }
+
+  prevTrack(): void {
+    this.emitPrevTrack.emit(this.sound.id);
   }
 
   ngAfterViewInit(): void {
