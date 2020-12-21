@@ -1,25 +1,25 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Sound} from './shared/sound';
+import {Song} from './shared/song';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 
-interface SoundsResults {
-  results: Sound[];
+interface SongsResults {
+  results: Song[];
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AudioPlayerService {
-  private readonly countSounds = 20;
+  private readonly countSongs = 20;
 
   constructor(private http: HttpClient) {}
 
-  getITunesSound(): Observable<Sound[]> {
-    return this.http.get<SoundsResults>(environment.itunesUrl).pipe(
-      map((sounds: SoundsResults) => sounds.results.slice(1, this.countSounds))
+  getITunesSongs(): Observable<Song[]> {
+    return this.http.get<SongsResults>(environment.itunesUrl).pipe(
+      map((songs: SongsResults) => songs.results.slice(1, this.countSongs))
     );
   }
 }

@@ -11,21 +11,21 @@
 
     <!-- start swiper wrapper -->
     <div class="swiper-wrapper">
-        <div class="sound swiper-slide"
-             *ngFor="let sound of sounds; index as i;
+        <div class="song swiper-slide"
+             *ngFor="let song of songs; index as i;
              trackBy: trackByFn"
         >
-          <div [ngClass]="isActiveSound(i)" class="audio-image">
-            <button class="btn btn-play" (click)="onClickSound(i, sound)">
-              <img *ngIf="!isClickedSound(i)" src="../../../assets/images/audio-list/btn-play.svg" alt="play">
-              <img *ngIf="isClickedSound(i)" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
+          <div [ngClass]="isActiveSong(i)" class="audio-image">
+            <button class="btn btn-play" (click)="onClickSong(i, song)">
+              <img *ngIf="!isClickedSong(i)" src="../../../assets/images/audio-list/btn-play.svg" alt="play">
+              <img *ngIf="isClickedSong(i)" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
             </button>
           </div>
 
           <div class="wrapper-audio-description">
             <div class="audio-description">
-              <span class="name-of-music">{{sound.trackName}} <span *ngIf="!sound.trackName">Default</span></span>
-              <span class="artist-name">{{sound.artistName}}</span>
+              <span class="name-of-music">{{song.songName}} <span *ngIf="!song.songName">Default</span></span>
+              <span class="artist-name">{{song.artistName}}</span>
             </div>
             <button class="btn btn-other-controls">
               <img src="../../../assets/images/audio-list/other-controls.svg" alt="other-controls">

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
-import {Sound} from './shared/sound';
+import {Song} from './shared/song';
 
 @Component({
   selector: 'app-audio-player',
@@ -8,24 +8,24 @@ import {Sound} from './shared/sound';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioPlayerComponent {
-  sound: Sound;
-  currentSoundId;
+  song: Song;
+  currentSongId;
   isPause;
 
   constructor(private cdRef: ChangeDetectorRef) {}
 
-  getSounds(sound: Sound): void {
-    this.sound = sound;
-    this.currentSoundId = undefined;
+  getSong(song: Song): void {
+    this.song = song;
+    this.currentSongId = undefined;
   }
 
   nextTrack(): void {
-    this.currentSoundId = this.sound.id + 1;
+    this.currentSongId = this.song.id + 1;
     this.isPause = true;
   }
 
   prevTrack(): void {
-    this.currentSoundId = this.sound.id - 1;
+    this.currentSongId = this.song.id - 1;
     this.isPause = true;
   }
 

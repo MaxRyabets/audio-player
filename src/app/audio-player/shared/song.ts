@@ -1,6 +1,6 @@
-export interface Sound {
+export interface Song {
   id?: number;
-  trackName: string;
+  songName: string;
   title?: string;
   artistName: string;
   previewUrl?: string;

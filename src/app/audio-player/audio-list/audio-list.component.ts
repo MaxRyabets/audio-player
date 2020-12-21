@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {Sound} from '../shared/sound';
+import {Song} from '../shared/song';
 import {AudioPlayerService} from '../audio-player.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
@@ -26,25 +26,25 @@ SwiperCore.use([Navigation, Pagination]);
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
-  sounds: Sound[] = [];
+  songs: Song[] = [];
   currentPlayingSongId;
   isPause = false;
 
   destroy$ = new Subject();
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
-  @Output() emitSound = new EventEmitter<Sound>();
+  @Output() emitSong = new EventEmitter<Song>();
 
   @Input() set shouldPause(isPause: boolean) {
     this.isPause = isPause;
   }
 
-  @Input() set currentSoundId(soundId: number) {
-    if (soundId === undefined) {
+  @Input() set currentSongId(songId: number) {
+    if (songId === undefined) {
       return;
     }
 
-    this.emitNewSound(soundId);
+    this.emitNewSong(songId);
   }
 
   swiper: Swiper;
@@ -55,23 +55,23 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getSounds();
+    this.getSongs();
   }
 
-  trackByFn(index, sound): number {
-    return sound.id;
+  trackByFn(index, song): number {
+    return song.id;
   }
 
-  onClickSound(id: number, sound: Sound): void {
+  onClickSong(id: number, song: Song): void {
     this.isPause = !this.isPause;
 
-    const soundWithId: Sound = {
+    const songWithId: Song = {
       id,
-      ...sound
+      ...song
     };
 
     this.currentPlayingSongId = id;
-    this.emitSound.emit(soundWithId);
+    this.emitSong.emit(songWithId);
   }
 
   ngAfterViewInit(): void {
@@ -109,11 +109,11 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  isActiveSound(soundIndex: number): string {
-    return this.currentPlayingSongId === soundIndex && this.isPause ? 'active-image' : 'inactive-image';
+  isActiveSong(songIndex: number): string {
+    return this.currentPlayingSongId === songIndex && this.isPause ? 'active-image' : 'inactive-image';
   }
 
-  isClickedSound(index: number): boolean {
+  isClickedSong(index: number): boolean {
     return this.currentPlayingSongId === index && this.isPause;
   }
 
@@ -122,37 +122,37 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private getSounds(): void {
-    this.audioService.getITunesSound().pipe(
+  private getSongs(): void {
+    this.audioService.getITunesSongs().pipe(
       takeUntil(this.destroy$),
-      tap(sounds => {
-        this.sounds = sounds;
+      tap(songs => {
+        this.songs = songs;
         this.cdRef.detectChanges();
       })
     ).subscribe();
   }
 
-  private emitNewSound(soundId: number): void {
-    let sound: Sound;
-    const soundsLength = this.sounds.length;
-    let id = soundId;
+  private emitNewSong(songId: number): void {
+    let song: Song;
+    const songsLength = this.songs.length;
+    let id = songId;
 
-    if (soundsLength === soundId) {
+    if (songsLength === songId) {
       id = 0;
     }
 
-    if (soundId < 0) {
-      id = soundsLength - 1;
+    if (songId < 0) {
+      id = songsLength - 1;
     }
 
-    sound = this.sounds[id];
+    song = this.songs[id];
 
-    const soundWithId: Sound = {
+    const songWithId: Song = {
       id,
-      ...sound
+      ...song
     };
 
     this.currentPlayingSongId = id;
-    this.emitSound.emit(soundWithId);
+    this.emitSong.emit(songWithId);
   }
 }

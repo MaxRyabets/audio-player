@@ -10,7 +10,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {Sound} from '../shared/sound';
+import {Song} from '../shared/song';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {Timestamp} from '../shared/timestamp';
@@ -26,27 +26,27 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @Output() emitPrevTrack = new EventEmitter<number>();
   @Output() emitIsPause = new EventEmitter<boolean>();
 
-  currentSound: Sound;
+  currentSong: Song;
   progressBarValue = 0;
 
   destroy$ = new Subject();
 
   audio = new Audio();
 
-  get sound(): Sound {
-    return this.currentSound;
+  get song(): Song {
+    return this.currentSong;
   }
 
-  @Input() set sound(sound: Sound) {
-    if (this.isCurrentSoundExist(sound)) {
+  @Input() set song(song: Song) {
+    if (this.isCurrentSongExist(song)) {
       this.playPause();
 
       return;
     }
 
-    this.currentSound = sound;
+    this.currentSong = song;
 
-    this.resetAudioPlayer(sound);
+    this.resetAudioPlayer(song);
   }
 
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
@@ -58,6 +58,10 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('currentTime') currentTime: ElementRef;
   @ViewChild('audioVolume') audioVolume: ElementRef;
   @ViewChild('volumePercentage') volumePercentage: ElementRef;
+
+  get currentTimeElement(): HTMLElement {
+    return this.currentTime.nativeElement;
+  }
 
   get titlePlayElement(): HTMLElement {
     return this.titleBtnPlay.nativeElement;
@@ -74,11 +78,11 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   nextTrack(): void {
-    this.emitNextTrack.emit(this.sound.id);
+    this.emitNextTrack.emit(this.song.id);
   }
 
   prevTrack(): void {
-    this.emitPrevTrack.emit(this.sound.id);
+    this.emitPrevTrack.emit(this.song.id);
   }
 
   ngAfterViewInit(): void {
@@ -115,7 +119,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
         this.playPause();
-        console.log('emit', this.audio.paused);
         this.emitIsPause.emit(!this.audio.paused);
       })
     );
@@ -144,7 +147,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       tap(() => {
         this.duration.nativeElement.textContent = this.convertDuration(this.audio.duration);
-        this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
 
         this.playPause();
       })
@@ -182,7 +185,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
         this.audio.currentTime = percent * this.audio.duration;
         this.progressBarValue = Math.floor(percent * 100);
-        this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
 
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
         this.cdRef.detectChanges();
@@ -207,7 +210,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
         }
 
         this.progressBarValue = currentTimeAudioPlayed;
-        this.currentTime.nativeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
 
         this.cdRef.detectChanges();
@@ -232,14 +235,14 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     );
   }
 
-  private resetAudioPlayer(sound: Sound): void {
+  private resetAudioPlayer(song: Song): void {
     this.audio.pause();
-    this.audio.src = sound.previewUrl;
+    this.audio.src = song.previewUrl;
     this.progressBarValue = 0;
     this.audio.volume = 0.5;
   }
 
-  private isCurrentSoundExist(sound: Sound): boolean {
-    return this.currentSound !== undefined && this.currentSound.id === sound.id;
+  private isCurrentSongExist(song: Song): boolean {
+    return this.currentSong !== undefined && this.currentSong.id === song.id;
   }
 }
