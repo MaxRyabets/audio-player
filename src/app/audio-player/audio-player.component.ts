@@ -21,10 +21,12 @@ export class AudioPlayerComponent {
 
   nextTrack(): void {
     this.currentSoundId = this.sound.id + 1;
+    this.isPause = true;
   }
 
   prevTrack(): void {
     this.currentSoundId = this.sound.id - 1;
+    this.isPause = true;
   }
 
   isAudioOnPause(isPause: boolean): void {

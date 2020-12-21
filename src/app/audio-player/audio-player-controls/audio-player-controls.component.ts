@@ -115,6 +115,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
         this.playPause();
+        console.log('emit', this.audio.paused);
         this.emitIsPause.emit(!this.audio.paused);
       })
     );
