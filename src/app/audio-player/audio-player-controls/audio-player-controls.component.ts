@@ -50,9 +50,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   }
 
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
-  @ViewChild('titleBtnPlay') titleBtnPlay: ElementRef;
-  @ViewChild('play') play: ElementRef;
-  @ViewChild('volume') volume: ElementRef;
   @ViewChild('duration') duration: ElementRef;
   @ViewChild('progressBar') progressBar: ElementRef;
   @ViewChild('currentTime') currentTime: ElementRef;
@@ -61,14 +58,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   get currentTimeElement(): HTMLElement {
     return this.currentTime.nativeElement;
-  }
-
-  get titlePlayElement(): HTMLElement {
-    return this.titleBtnPlay.nativeElement;
-  }
-
-  get playElement(): HTMLElement {
-    return this.play.nativeElement;
   }
 
   get progressAudio(): any {
@@ -85,10 +74,21 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     this.emitPrevTrack.emit(this.song.id);
   }
 
+  onClickTitlePlay(): void {
+    this.playPause();
+    this.emitIsPause.emit(!this.audio.paused);
+  }
+
+  onClickPlay(): void {
+    this.playPause();
+    this.emitIsPause.emit(!this.audio.paused);
+  }
+
+  onClickVolume(): void {
+    this.audio.muted = !this.audio.muted;
+  }
+
   ngAfterViewInit(): void {
-    const titlePlayEvent$ = this.onClickTitlePlay();
-    const playEvent$ = this.onClickPlay();
-    const volumeEvent$ = this.onClickVolume();
     const loadedAudio$ = this.loadedAudio();
     const progressBarEvent$ = this.clickOnProgressBar();
     const timeUpdateProgressBar$ = this.timeUpdateProgressBar();
@@ -96,9 +96,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
     merge(
       loadedAudio$,
-      titlePlayEvent$,
-      playEvent$,
-      volumeEvent$,
       progressBarEvent$,
       timeUpdateProgressBar$,
       audioVolumeEvent$
@@ -112,34 +109,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   private playPause(): void {
     this.audio.paused ? this.audio.play() : this.audio.pause();
-  }
-
-  private onClickTitlePlay(): Observable<MouseEvent> {
-    return fromEvent(this.titlePlayElement, 'click').pipe(
-      takeUntil(this.destroy$),
-      tap((event: MouseEvent) => {
-        this.playPause();
-        this.emitIsPause.emit(!this.audio.paused);
-      })
-    );
-  }
-
-  private onClickPlay(): Observable<MouseEvent> {
-    return fromEvent(this.playElement, 'click').pipe(
-      takeUntil(this.destroy$),
-      tap((event: MouseEvent) => {
-          this.playPause();
-          this.emitIsPause.emit(!this.audio.paused);
-        }
-      )
-    );
-  }
-
-  private onClickVolume(): Observable<MouseEvent> {
-    return fromEvent(this.volume.nativeElement, 'click').pipe(
-      takeUntil(this.destroy$),
-      tap((event: MouseEvent) => this.audio.muted = !this.audio.muted)
-    );
   }
 
   private loadedAudio(): Observable<Event> {

@@ -9,7 +9,7 @@
       <div class="container-title-img-btn">
         <img class="audio-image" src="../../../assets/images/audio-player/audio-image.svg" alt="audio-image"/>
 
-        <button class="btn audio-player-title-btn-play" #titleBtnPlay>
+        <button class="btn audio-player-title-btn-play" (click)="onClickTitlePlay()">
           <img *ngIf="audio.paused" src="../../../assets/images/audio-player/audio-player-title-btn-play.svg" alt="title-btn-play"/>
           <img *ngIf="!audio.paused" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
         </button>
@@ -30,7 +30,7 @@
         <img src="../../../assets/images/audio-player/btn-play-prev.svg" alt="play-prev"/>
       </button>
 
-      <button class="btn btn-audio-play" #play>
+      <button class="btn btn-audio-play" (click)="onClickPlay()">
         <img *ngIf="audio.paused" src="../../../assets/images/audio-player/btn-play.svg" alt="play"/>
         <img *ngIf="!audio.paused" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
       </button>
@@ -51,7 +51,7 @@
         <span #volumePercentage class="volume-percentage"></span>
       </span>
 
-      <button class="btn btn-volume" #volume>
+      <button class="btn btn-volume" (click)="onClickVolume()">
         <img src="../../../assets/images/audio-player/btn-volume.svg" alt="btn-volume"/>
       </button>
 
