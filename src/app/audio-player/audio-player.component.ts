@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {Sound} from './shared/sound';
 
 @Component({
@@ -10,6 +10,9 @@ import {Sound} from './shared/sound';
 export class AudioPlayerComponent {
   sound: Sound;
   currentSoundId;
+  isPause;
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   getSounds(sound: Sound): void {
     this.sound = sound;
@@ -22,5 +25,10 @@ export class AudioPlayerComponent {
 
   prevTrack(): void {
     this.currentSoundId = this.sound.id - 1;
+  }
+
+  isAudioOnPause(isPause: boolean): void {
+    this.isPause = isPause;
+    this.cdRef.detectChanges();
   }
 }

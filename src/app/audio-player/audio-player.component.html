@@ -2,6 +2,7 @@
   <app-audio-list
     (emitSound)="getSounds($event)"
     [currentSoundId]="currentSoundId"
+    [shouldPause]="isPause"
   ></app-audio-list>
 </section>
 
@@ -10,6 +11,7 @@
     [sound]="sound"
     (emitNextTrack)="nextTrack()"
     (emitPrevTrack)="prevTrack()"
+    (emitIsPause)="isAudioOnPause($event)"
   ></app-audio-players-controls>
 </section>
 

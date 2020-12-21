@@ -17,7 +17,8 @@
         >
           <div [ngClass]="isActiveSound(i)" class="audio-image">
             <button class="btn btn-play" (click)="onClickSound(i, sound)">
-              <img src="../../../assets/images/audio-list/title-image.svg" alt="play">
+              <img *ngIf="!isClickedSound(i)" src="../../../assets/images/audio-list/btn-play.svg" alt="play">
+              <img *ngIf="isClickedSound(i)" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
             </button>
           </div>
 

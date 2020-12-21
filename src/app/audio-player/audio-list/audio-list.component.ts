@@ -28,11 +28,16 @@ SwiperCore.use([Navigation, Pagination]);
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   sounds: Sound[] = [];
   clickedId;
+  isPause = false;
 
   destroy$ = new Subject();
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
   @Output() emitSound = new EventEmitter<Sound>();
+
+  @Input() set shouldPause(isPause: boolean) {
+    this.isPause = isPause;
+  }
 
   @Input() set currentSoundId(soundId: number) {
     if (soundId === undefined) {
@@ -58,6 +63,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickSound(id: number, sound: Sound): void {
+    this.isPause = !this.isPause;
+
     const soundWithId: Sound = {
       id,
       ...sound
@@ -103,7 +110,11 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isActiveSound(soundIndex: number): string {
-    return this.clickedId !== soundIndex ? 'inactive-image' : 'active-image';
+    return this.clickedId === soundIndex && this.isPause ? 'active-image' : 'inactive-image';
+  }
+
+  isClickedSound(index: number): boolean {
+    return this.clickedId === index && this.isPause;
   }
 
   ngOnDestroy(): void {

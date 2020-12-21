@@ -24,6 +24,8 @@ import {Timestamp} from '../shared/timestamp';
 export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @Output() emitNextTrack = new EventEmitter<number>();
   @Output() emitPrevTrack = new EventEmitter<number>();
+  @Output() emitIsPause = new EventEmitter<boolean>();
+
   currentSound: Sound;
   progressBarValue = 0;
 
@@ -113,6 +115,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
         this.playPause();
+        this.emitIsPause.emit(!this.audio.paused);
       })
     );
   }
@@ -120,7 +123,11 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   private onClickPlay(): Observable<MouseEvent> {
     return fromEvent(this.playElement, 'click').pipe(
       takeUntil(this.destroy$),
-      tap((event: MouseEvent) => this.playPause())
+      tap((event: MouseEvent) => {
+          this.playPause();
+          this.emitIsPause.emit(!this.audio.paused);
+        }
+      )
     );
   }
 
