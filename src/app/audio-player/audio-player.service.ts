@@ -4,6 +4,8 @@ import {Song} from './shared/song';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
+import {SongAdapterService} from './core/song-adapter.service';
+import {SongModel} from './core/song.model';
 
 interface SongsResults {
   results: Song[];
@@ -15,11 +17,15 @@ interface SongsResults {
 export class AudioPlayerService {
   private readonly countSongs = 20;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private songAdapterService: SongAdapterService,
+  ) {}
 
-  getITunesSongs(): Observable<Song[]> {
+  getITunesSongs(): Observable<SongModel[]> {
     return this.http.get<SongsResults>(environment.itunesUrl).pipe(
-      map((songs: SongsResults) => songs.results.slice(1, this.countSongs))
+      map((songs: SongsResults) => songs.results.slice(1, this.countSongs)),
+      map((songs: any[]) => songs.map(item => this.songAdapterService.adapt(item))),
     );
   }
 }
