@@ -10,7 +10,8 @@
         <img class="audio-image" src="../../../assets/images/audio-player/audio-image.svg" alt="audio-image"/>
 
         <button class="btn audio-player-title-btn-play" #titleBtnPlay>
-          <img src="../../../assets/images/audio-player/audio-player-title-btn-play.svg" alt="title-btn-play"/>
+          <img *ngIf="audio.paused" src="../../../assets/images/audio-player/audio-player-title-btn-play.svg" alt="title-btn-play"/>
+          <img *ngIf="!audio.paused" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
         </button>
       </div>
 
@@ -30,7 +31,8 @@
       </button>
 
       <button class="btn btn-audio-play" #play>
-        <img src="../../../assets/images/audio-player/btn-play.svg" alt="play"/>
+        <img *ngIf="audio.paused" src="../../../assets/images/audio-player/btn-play.svg" alt="play"/>
+        <img *ngIf="!audio.paused" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
       </button>
 
       <button class="btn btn-audio-next" (click)="nextTrack()">
