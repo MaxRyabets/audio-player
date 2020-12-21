@@ -218,15 +218,15 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     return fromEvent(this.audioVolume.nativeElement, 'click').pipe(
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
-        const audioVolumeWidth = this.audioVolume.nativeElement.offsetWidth;
-        const newVolume = event.offsetX / audioVolumeWidth;
+        const volumeWidth = this.audioVolume.nativeElement.offsetWidth;
+        const percentVolume = event.offsetX / volumeWidth;
 
-        if (newVolume < 0) {
+        if (percentVolume < 0) {
           return;
         }
 
-        this.audio.volume = newVolume;
-        this.volumePercentage.nativeElement.style.width = `${newVolume * 100}%`;
+        this.audio.volume = percentVolume;
+        this.volumePercentage.nativeElement.style.width = `${percentVolume * 100}%`;
       })
     );
   }
