@@ -166,6 +166,14 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     return fromEvent(this.audio, 'timeupdate').pipe(
       takeUntil(this.destroy$),
       tap(() => {
+        if (this.audio.currentTime === this.audio.duration) {
+          this.emitNextTrack.emit(this.song.id);
+          this.audio.pause();
+
+          return;
+        }
+
+
         if (this.audio.paused) {
           return;
         }
