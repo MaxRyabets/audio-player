@@ -15,7 +15,7 @@ import {AudioPlayerService} from '../audio-player.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
 import {fromEvent, Subject} from 'rxjs';
-import {takeUntil, tap} from 'rxjs/operators';
+import {filter, takeUntil, tap} from 'rxjs/operators';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -47,9 +47,9 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.emitNewSong(songId);
-
     this.autoChangeSlide(songId);
+
+    this.emitNewSong(songId);
   }
 
   swiper: Swiper;
@@ -94,6 +94,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       loop: true,
       observer: true,
       loopFillGroupWithBlank: true,
+      watchSlidesProgress: true,
+      watchSlidesVisibility: true,
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
@@ -133,8 +135,12 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    fromEvent(this.swiperContainer.nativeElement, 'resize').pipe(
-      tap(console.log)
+    fromEvent(window, 'resize').pipe(
+      takeUntil(this.destroy$),
+      filter(() => this.swiper.clickedSlide !== undefined),
+      tap(() => {
+        this.swiper.slideToLoop(this.currentPlayingSongId);
+      })
     ).subscribe();
   }
 
@@ -185,6 +191,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.isChangeSizeWindow(currentBreakpoint, songId, slidesPerView)) {
       this.swiper.slideToLoop(songId);
+      this.swiper.slideNext();
     }
 
     if (this.songs.length === songId) {
