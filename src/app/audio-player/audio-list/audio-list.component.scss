@@ -81,7 +81,6 @@
     width: 10px;
     height: 10px;
     opacity: unset;
-    color: #E0E0E0;
     top: 150px;
 
     &:after {
@@ -96,14 +95,6 @@
 
   .swiper-button-prev {
     left: -10px;
-  }
-
-  .swiper-button-prev.swiper-button-disabled,
-  .swiper-button-next.swiper-button-disabled
-  {
-    &:after {
-      color: white;
-    }
   }
 
   .disabled_swiper_button {

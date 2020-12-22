@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {Song} from './shared/song';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
-import {map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {SongAdapterService} from './core/song-adapter.service';
 import {SongModel} from './core/song.model';
 
@@ -25,6 +25,7 @@ export class AudioPlayerService {
   getITunesSongs(): Observable<SongModel[]> {
     return this.http.get<SongsResults>(environment.itunesUrl).pipe(
       map((songs: SongsResults) => songs.results.slice(1, this.countSongs)),
+      map((songs: any[]) => songs.filter(song => song.hasOwnProperty('previewUrl'))),
       map((songs: any[]) => songs.map(item => this.songAdapterService.adapt(item))),
     );
   }

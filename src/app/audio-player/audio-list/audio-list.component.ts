@@ -14,7 +14,7 @@ import {Song} from '../shared/song';
 import {AudioPlayerService} from '../audio-player.service';
 import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
-import {Subject} from 'rxjs';
+import {fromEvent, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 
 SwiperCore.use([Navigation, Pagination]);
@@ -29,6 +29,9 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   songs: Song[] = [];
   currentPlayingSongId;
   isPause = false;
+  readonly breakPointSmallWindow = '@0.75';
+  readonly breakPointMiddleWindow = '@1.00';
+  readonly breakPointBigWindow = '@1.50';
 
   destroy$ = new Subject();
 
@@ -45,6 +48,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.emitNewSong(songId);
+
+    this.autoChangeSlide(songId);
   }
 
   swiper: Swiper;
@@ -63,7 +68,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickSong(id: number, song: Song): void {
-    this.isPause = !this.isPause;
+    this.setPause(id);
 
     const songWithId: Song = {
       id,
@@ -74,13 +79,21 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.emitSong.emit(songWithId);
   }
 
-  ngAfterViewInit(): void {
-    this.initSwiper();
+  private setPause(id: number): void {
+    if (id !== this.currentPlayingSongId) {
+      this.isPause = true;
+
+      return;
+    }
+
+    this.isPause = !this.isPause;
   }
 
   initSwiper(): void {
     this.swiper = new Swiper(this.swiperContainer.nativeElement, {
+      loop: true,
       observer: true,
+      loopFillGroupWithBlank: true,
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
@@ -90,20 +103,22 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
         prevEl: '.swiper-button-prev',
       },
       breakpoints: {
-        320: {
-          slidesPerView: 1,
+        '@0.75': {
+          slidesPerView: 2,
           spaceBetween: 20,
-          slidesPerGroup: 1
+          slidesPerGroup: 2,
         },
-        480: {
+        '@1.00': {
           slidesPerView: 3,
           spaceBetween: 30,
-          slidesPerGroup: 3
+          slidesPerGroup: 3,
+
         },
-        640: {
+        '@1.50': {
           slidesPerView: 5,
           spaceBetween: 30,
-          slidesPerGroup: 5
+          slidesPerGroup: 5,
+
         },
       }
     });
@@ -117,6 +132,12 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.currentPlayingSongId === index && this.isPause;
   }
 
+  ngAfterViewInit(): void {
+    fromEvent(this.swiperContainer.nativeElement, 'resize').pipe(
+      tap(console.log)
+    ).subscribe();
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -128,6 +149,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       tap(songs => {
         this.songs = songs;
         this.cdRef.detectChanges();
+
+        this.initSwiper();
       })
     ).subscribe();
   }
@@ -154,5 +177,28 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.currentPlayingSongId = id;
     this.emitSong.emit(songWithId);
+  }
+
+  private autoChangeSlide(songId: number): void {
+    const currentBreakpoint = this.swiperContainer.nativeElement.swiper.currentBreakpoint;
+    const slidesPerView = this.swiperContainer.nativeElement.swiper.params.slidesPerView;
+
+    if (this.isChangeSizeWindow(currentBreakpoint, songId, slidesPerView)) {
+      this.swiper.slideToLoop(songId);
+    }
+
+    if (this.songs.length === songId) {
+      this.swiper.slideToLoop(0);
+    }
+
+    if (songId < 0) {
+      this.swiper.slideToLoop(this.songs.length - 1);
+    }
+  }
+
+  private isChangeSizeWindow(currentBreakpoint: string, songId: number, slidesPerView: number): boolean {
+    return this.breakPointBigWindow === currentBreakpoint && songId % slidesPerView === 0
+      || this.breakPointMiddleWindow === currentBreakpoint && songId % slidesPerView === 0
+      || this.breakPointSmallWindow === currentBreakpoint;
   }
 }
