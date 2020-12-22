@@ -219,7 +219,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     this.audio.pause();
     this.audio.src = song.previewUrl;
     this.progressBarValue = 0;
-    this.audio.volume = 0;
+    this.audio.volume = 0.5;
   }
 
   private isCurrentSongExist(song: Song): boolean {
