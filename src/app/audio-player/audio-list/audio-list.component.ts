@@ -1,10 +1,11 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
-  Input, OnChanges,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -53,7 +54,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private readonly audioService: AudioPlayerService,
+    private audioService: AudioPlayerService,
     private audioSettingsService: AudioSettingsService,
     private cdRef: ChangeDetectorRef
   ) {}

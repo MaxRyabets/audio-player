@@ -6,7 +6,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnDestroy, OnInit,
+  OnDestroy,
   Output,
   ViewChild
 } from '@angular/core';
@@ -22,13 +22,12 @@ import {AudioSettingsService} from '../audio-settings.service';
   styleUrls: ['./audio-player-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @Output() emitNextTrack = new EventEmitter<number>();
   @Output() emitPrevTrack = new EventEmitter<number>();
 
   currentSong: Song;
   progressBarValue = 0;
-  isPause = false;
 
   destroy$ = new Subject();
 
@@ -69,12 +68,6 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     private cdRef: ChangeDetectorRef,
     private audioSettingsService: AudioSettingsService
   ) {}
-
-  ngOnInit(): void {
-    this.audioSettingsService.statePause$.asObservable().pipe(
-      tap(state => this.isPause = state)
-    ).subscribe();
-  }
 
   nextTrack(): void {
     this.emitNextTrack.emit(this.song.id);
