@@ -176,7 +176,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
           return;
         }
 
-
         if (this.audio.paused) {
           return;
         }

@@ -175,7 +175,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     song = this.songs[id];
-
     const songWithId: Song = {
       id,
       ...song
