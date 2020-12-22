@@ -4,7 +4,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
+  Input, OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -16,6 +16,7 @@ import SwiperCore, {Navigation, Pagination} from 'swiper/core';
 import Swiper from 'swiper';
 import {fromEvent, Subject} from 'rxjs';
 import {filter, takeUntil, tap} from 'rxjs/operators';
+import {AudioSettingsService} from '../audio-settings.service';
 
 SwiperCore.use([Navigation, Pagination]);
 
@@ -29,20 +30,19 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   songs: Song[] = [];
   currentPlayingSongId;
   isPause = false;
+
   readonly breakPointSmallWindow = '@0.75';
   readonly breakPointMiddleWindow = '@1.00';
   readonly breakPointBigWindow = '@1.50';
+
+  swiper: Swiper;
 
   destroy$ = new Subject();
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
   @Output() emitSong = new EventEmitter<Song>();
 
-  @Input() set shouldPause(isPause: boolean) {
-    this.isPause = isPause;
-  }
-
-  @Input() set currentSongId(songId: number) {
+  @Input() set songId(songId: number) {
     if (songId === undefined) {
       return;
     }
@@ -52,15 +52,20 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.emitNewSong(songId);
   }
 
-  swiper: Swiper;
-
   constructor(
     private readonly audioService: AudioPlayerService,
+    private audioSettingsService: AudioSettingsService,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.getSongs();
+    this.audioSettingsService.statePause$.asObservable().pipe(
+      tap((state) => {
+        this.isPause = state;
+        this.cdRef.detectChanges();
+      })
+    ).subscribe();
   }
 
   trackByFn(index, song): number {
@@ -68,7 +73,11 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickSong(id: number, song: Song): void {
-    this.setPause(id);
+    if (id !== this.currentPlayingSongId) {
+      this.audioSettingsService.statePause$.next(false);
+    }
+
+    this.audioSettingsService.statePause$.next(!this.isPause);
 
     const songWithId: Song = {
       id,
@@ -77,16 +86,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.currentPlayingSongId = id;
     this.emitSong.emit(songWithId);
-  }
-
-  private setPause(id: number): void {
-    if (id !== this.currentPlayingSongId) {
-      this.isPause = true;
-
-      return;
-    }
-
-    this.isPause = !this.isPause;
   }
 
   initSwiper(): void {

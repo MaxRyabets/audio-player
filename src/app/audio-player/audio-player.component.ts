@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {Song} from './shared/song';
+import {AudioSettingsService} from './audio-settings.service';
 
 @Component({
   selector: 'app-audio-player',
@@ -10,9 +11,11 @@ import {Song} from './shared/song';
 export class AudioPlayerComponent {
   song: Song;
   currentSongId;
-  isPause;
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private audioSettingsService: AudioSettingsService,
+  ) {}
 
   getSong(song: Song): void {
     this.song = song;
@@ -21,16 +24,11 @@ export class AudioPlayerComponent {
 
   nextTrack(): void {
     this.currentSongId = this.song.id + 1;
-    this.isPause = true;
+    this.audioSettingsService.statePause$.next(true);
   }
 
   prevTrack(): void {
     this.currentSongId = this.song.id - 1;
-    this.isPause = true;
-  }
-
-  isAudioOnPause(isPause: boolean): void {
-    this.isPause = isPause;
-    this.cdRef.detectChanges();
+    this.audioSettingsService.statePause$.next(true);
   }
 }

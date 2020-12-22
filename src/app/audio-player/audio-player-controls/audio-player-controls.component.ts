@@ -6,7 +6,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnDestroy,
+  OnDestroy, OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -14,6 +14,7 @@ import {Song} from '../shared/song';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {Timestamp} from '../shared/timestamp';
+import {AudioSettingsService} from '../audio-settings.service';
 
 @Component({
   selector: 'app-audio-players-controls',
@@ -21,13 +22,13 @@ import {Timestamp} from '../shared/timestamp';
   styleUrls: ['./audio-player-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
+export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() emitNextTrack = new EventEmitter<number>();
   @Output() emitPrevTrack = new EventEmitter<number>();
-  @Output() emitIsPause = new EventEmitter<boolean>();
 
   currentSong: Song;
   progressBarValue = 0;
+  isPause = false;
 
   destroy$ = new Subject();
 
@@ -64,7 +65,16 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     return this.progressBar.nativeElement;
   }
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private audioSettingsService: AudioSettingsService
+  ) {}
+
+  ngOnInit(): void {
+    this.audioSettingsService.statePause$.asObservable().pipe(
+      tap(state => this.isPause = state)
+    ).subscribe();
+  }
 
   nextTrack(): void {
     this.emitNextTrack.emit(this.song.id);
@@ -76,12 +86,12 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   onClickTitlePlay(): void {
     this.playPause();
-    this.emitIsPause.emit(!this.audio.paused);
+    this.audioSettingsService.statePause$.next(!this.audio.paused);
   }
 
   onClickPlay(): void {
     this.playPause();
-    this.emitIsPause.emit(!this.audio.paused);
+    this.audioSettingsService.statePause$.next(!this.audio.paused);
   }
 
   onClickVolume(): void {
@@ -216,7 +226,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     this.audio.pause();
     this.audio.src = song.previewUrl;
     this.progressBarValue = 0;
-    this.audio.volume = 0.5;
+    this.audio.volume = 0;
   }
 
   private isCurrentSongExist(song: Song): boolean {

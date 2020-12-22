@@ -1,8 +1,7 @@
 <section class="container-player container-audio-list">
   <app-audio-list
     (emitSong)="getSong($event)"
-    [currentSongId]="currentSongId"
-    [shouldPause]="isPause"
+    [songId]="currentSongId"
   ></app-audio-list>
 </section>
 
@@ -11,7 +10,6 @@
     [song]="song"
     (emitNextTrack)="nextTrack()"
     (emitPrevTrack)="prevTrack()"
-    (emitIsPause)="isAudioOnPause($event)"
   ></app-audio-players-controls>
 </section>
 
