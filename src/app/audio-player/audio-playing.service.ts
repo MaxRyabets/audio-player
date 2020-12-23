@@ -6,9 +6,9 @@ import {AudioPlaying} from './shared/audio-playing';
   providedIn: 'root'
 })
 export class AudioPlayingService {
-  audioPlaying: AudioPlaying = {
+  private readonly audioPlaying: AudioPlaying = {
     idList: 0,
-    statePause: false,
+    isPause: false,
   };
 
   currentAudioPlaying$ = new BehaviorSubject(this.audioPlaying);
