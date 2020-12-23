@@ -60,6 +60,8 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     this.audioPlayingService.currentAudioPlaying$.asObservable().pipe(
       takeUntil(this.destroy$),
       tap((audioPlaying) => {
+        console.log(sessionStorage.getItem('audioPlaying'));
+
         if (this.isCurrentSongPlaying(audioPlaying.song)) {
           this.playPause();
           this.cdRef.detectChanges();
@@ -195,6 +197,14 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
         if (isNaN(currentTimeAudioPlayed)) {
           return;
         }
+
+        const currentPlayingSong = {
+          idList: this.audioPlaying.idList,
+          idSong: this.audioPlaying.song.id,
+          timeStamp: this.audio.currentTime
+        };
+
+        sessionStorage.setItem('audioPlaying', JSON.stringify(currentPlayingSong));
 
         this.progressBarValue = currentTimeAudioPlayed;
         this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
