@@ -178,7 +178,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
       takeUntil(this.destroy$),
       tap(() => {
         if (this.audio.currentTime === this.audio.duration) {
-          /*this.emitNextTrack.emit(this.song.id);*/
+          this.emitNextTrack.emit(this.currentPlayingSongId + 1);
           this.audio.pause();
 
           return;
