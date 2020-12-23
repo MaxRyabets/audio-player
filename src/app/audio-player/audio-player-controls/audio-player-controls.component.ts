@@ -5,8 +5,8 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -14,7 +14,8 @@ import {Song} from '../shared/song';
 import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {Timestamp} from '../shared/timestamp';
-import {AudioSettingsService} from '../audio-settings.service';
+import {AudioPlayingService} from '../audio-playing.service';
+import {AudioPlaying} from '../shared/audio-playing';
 
 @Component({
   selector: 'app-audio-players-controls',
@@ -22,32 +23,18 @@ import {AudioSettingsService} from '../audio-settings.service';
   styleUrls: ['./audio-player-controls.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
-  @Output() emitNextTrack = new EventEmitter<number>();
-  @Output() emitPrevTrack = new EventEmitter<number>();
+export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
+  audioPlaying: AudioPlaying;
 
-  currentSong: Song;
+  currentPlayingSongId: number;
   progressBarValue = 0;
 
   destroy$ = new Subject();
 
   audio = new Audio();
 
-  get song(): Song {
-    return this.currentSong;
-  }
-
-  @Input() set song(song: Song) {
-    if (this.isCurrentSongExist(song)) {
-      this.playPause();
-
-      return;
-    }
-
-    this.currentSong = song;
-
-    this.resetAudioPlayer(song);
-  }
+  @Output() emitNextTrack = new EventEmitter<number>();
+  @Output() emitPrevTrack = new EventEmitter<number>();
 
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
   @ViewChild('duration') duration: ElementRef;
@@ -66,25 +53,46 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private audioSettingsService: AudioSettingsService
+    private audioPlayingService: AudioPlayingService
   ) {}
 
+  ngOnInit(): void {
+    this.audioPlayingService.currentAudioPlaying$.asObservable().pipe(
+      takeUntil(this.destroy$),
+      tap((audioPlaying) => {
+        if (this.isCurrentSongPlaying(audioPlaying.song)) {
+          this.playPause();
+          this.cdRef.detectChanges();
+
+          return;
+        }
+
+        this.currentPlayingSongId = audioPlaying.song.id;
+        this.audioPlaying = audioPlaying;
+
+        this.resetAudioPlayer(this.audioPlaying.song);
+      })
+    ).subscribe();
+  }
+
   nextTrack(): void {
-    this.emitNextTrack.emit(this.song.id);
+    this.emitNextTrack.emit(this.currentPlayingSongId + 1);
   }
 
   prevTrack(): void {
-    this.emitPrevTrack.emit(this.song.id);
+    this.emitPrevTrack.emit(this.currentPlayingSongId - 1);
   }
 
   onClickTitlePlay(): void {
-    this.playPause();
-    this.audioSettingsService.statePause$.next(!this.audio.paused);
+    this.audioPlaying.isPause = !this.audioPlaying.isPause;
+    this.audioPlayingService.currentAudioPlaying$.next(this.audioPlaying);
+    this.cdRef.detectChanges();
   }
 
   onClickPlay(): void {
-    this.playPause();
-    this.audioSettingsService.statePause$.next(!this.audio.paused);
+    this.audioPlaying.isPause = !this.audioPlaying.isPause;
+    this.audioPlayingService.currentAudioPlaying$.next(this.audioPlaying);
+    this.cdRef.detectChanges();
   }
 
   onClickVolume(): void {
@@ -170,7 +178,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       takeUntil(this.destroy$),
       tap(() => {
         if (this.audio.currentTime === this.audio.duration) {
-          this.emitNextTrack.emit(this.song.id);
+          /*this.emitNextTrack.emit(this.song.id);*/
           this.audio.pause();
 
           return;
@@ -221,7 +229,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     this.audio.volume = 0.5;
   }
 
-  private isCurrentSongExist(song: Song): boolean {
-    return this.currentSong !== undefined && this.currentSong.id === song.id;
+  private isCurrentSongPlaying(song: Song): boolean {
+    return this.currentPlayingSongId !== undefined && this.currentPlayingSongId === song.id;
   }
 }

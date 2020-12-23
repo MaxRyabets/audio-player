@@ -1,6 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
-import {Song} from './shared/song';
-import {AudioSettingsService} from './audio-settings.service';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AudioPlayingService} from './audio-playing.service';
+import {takeUntil, tap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {AudioPlaying} from './shared/audio-playing';
 
 @Component({
   selector: 'app-audio-player',
@@ -8,27 +10,33 @@ import {AudioSettingsService} from './audio-settings.service';
   styleUrls: ['./audio-player.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AudioPlayerComponent {
-  song: Song;
-  currentSongId;
+export class AudioPlayerComponent implements OnInit, OnDestroy {
+  audioPlaying: AudioPlaying;
+  destroy$ = new Subject();
+  songId;
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private audioSettingsService: AudioSettingsService,
+    private audioPlayingService: AudioPlayingService,
   ) {}
 
-  getSong(song: Song): void {
-    this.song = song;
-    this.currentSongId = undefined;
+  ngOnInit(): void {
+    this.audioPlayingService.currentAudioPlaying$.asObservable().pipe(
+      takeUntil(this.destroy$),
+      tap((audioPlaying) => this.audioPlaying = audioPlaying)
+    ).subscribe();
   }
 
-  nextTrack(): void {
-    this.currentSongId = this.song.id + 1;
-    this.audioSettingsService.statePause$.next(true);
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  prevTrack(): void {
-    this.currentSongId = this.song.id - 1;
-    this.audioSettingsService.statePause$.next(true);
+  nextTrack(id: number): void {
+    this.songId = id;
+  }
+
+  prevTrack(id): void {
+    this.songId = id;
   }
 }
