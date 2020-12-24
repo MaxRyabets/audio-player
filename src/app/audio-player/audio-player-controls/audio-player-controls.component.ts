@@ -13,13 +13,13 @@ import {
 } from '@angular/core';
 import { Song } from '../interfaces/song';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
-import { catchError, takeUntil, tap } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Timestamp } from './timestamp';
 import { AudioPlayingService } from '../services/audio-playing.service';
 import { AudioPlaying } from '../interfaces/audio-playing';
-import { PlayingSong } from '../interfaces/playing-song';
 import { StorageInterface } from '../interfaces/storage.interface';
 import { BROWSER_STORAGE } from '../storage-injection-token';
+import { PlayingSong } from '../interfaces/playing-song';
 
 @Component({
   selector: 'app-audio-players-controls',
@@ -60,9 +60,7 @@ export class AudioPlayerControlsComponent
     private cdRef: ChangeDetectorRef,
     private audioPlayingService: AudioPlayingService,
     @Inject(BROWSER_STORAGE) private storage: StorageInterface
-  ) {
-    this.audio.autoplay = true;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.audioPlayingService.currentAudioPlaying$
@@ -95,14 +93,24 @@ export class AudioPlayerControlsComponent
   }
 
   onClickTitlePlay(): void {
-    this.audioPlaying.isPause = !this.audioPlaying.isPause;
+    this.audioPlaying.playPause.isPause = !this.audioPlaying.playPause.isPause;
     this.audioPlayingService.currentAudioPlaying$.next(this.audioPlaying);
     this.cdRef.detectChanges();
   }
 
   onClickPlay(): void {
-    this.audioPlaying.isPause = !this.audioPlaying.isPause;
-    this.audioPlayingService.currentAudioPlaying$.next(this.audioPlaying);
+    const isPlaying = false;
+    const isPause = this.audio.paused;
+
+    const audioPlaying: AudioPlaying = {
+      ...this.audioPlaying,
+      playPause: {
+        isPause,
+        playing: isPlaying,
+      },
+    };
+
+    this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
     this.cdRef.detectChanges();
   }
 
@@ -144,9 +152,14 @@ export class AudioPlayerControlsComponent
           this.audio.currentTime
         );
 
-        if (!this.storage.getLength()) {
-          this.playPause();
+        if (this.audioPlaying.playPause.playing) {
+          return;
         }
+
+        this.playPause();
+        /*if (!this.storage.getLength()) {
+          this.playPause();
+        }*/
 
         /*this.audio.play().then(() => {
           console.log('TORORLROLO');
@@ -225,16 +238,7 @@ export class AudioPlayerControlsComponent
           return;
         }
 
-        const currentPlayingSong: PlayingSong = {
-          idList: this.audioPlaying.idList,
-          song: this.audioPlaying.song,
-          timeStamp: this.audio.currentTime,
-        };
-
-        this.storage.setItem(
-          'audioPlaying',
-          JSON.stringify(currentPlayingSong)
-        );
+        this.setSavePlay();
 
         this.progressBarValue = currentTimeAudioPlayed;
         this.currentTimeElement.textContent = this.convertDuration(
@@ -267,10 +271,8 @@ export class AudioPlayerControlsComponent
   }
 
   private resetAudioPlayer(song: Song): void {
-    if (!this.storage.getLength()) {
-      this.audio.pause();
-      this.progressBarValue = 0;
-    }
+    this.audio.pause();
+    this.progressBarValue = 0;
 
     this.audio.src = this.audioPlaying.song.previewUrl;
     this.audio.volume = 0.5;
@@ -281,5 +283,15 @@ export class AudioPlayerControlsComponent
       this.currentPlayingSongId !== undefined &&
       this.currentPlayingSongId === song.id
     );
+  }
+
+  private setSavePlay(): void {
+    const currentPlayingSong: PlayingSong = {
+      idList: this.audioPlaying.idList,
+      song: this.audioPlaying.song,
+      timeStamp: this.audio.currentTime,
+    };
+
+    this.storage.setItem('audioPlaying', JSON.stringify(currentPlayingSong));
   }
 }

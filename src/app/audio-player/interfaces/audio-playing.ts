@@ -1,8 +1,9 @@
-import {Song} from './song';
+import { Song } from './song';
+import { StatePlayPause } from './state-play-pause';
 
 export interface AudioPlaying {
   idList: number;
   song?: Song;
-  isPause: boolean;
+  playPause: StatePlayPause;
   timestamp?: number;
 }

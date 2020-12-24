@@ -28,7 +28,6 @@ SwiperCore.use([Navigation, Pagination]);
 })
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   songs: Song[] = [];
-  currentSongId;
   isPause = false;
   audioPlaying: AudioPlaying;
 
@@ -64,7 +63,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((audioPlaying: AudioPlaying) => {
-          this.isPause = audioPlaying.isPause;
+          this.isPause = audioPlaying.playPause.isPause;
           this.audioPlaying = audioPlaying;
 
           this.cdRef.detectChanges();
@@ -78,23 +77,31 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickSong(id: number, song: Song): void {
+    let isPlaying = this.audioPlaying.playPause.playing;
+
+    if (this.audioPlaying.playPause.playing) {
+      isPlaying = false;
+    }
+
+    let isPause = this.audioPlaying.playPause.isPause;
+
     if (
       this.audioPlaying.hasOwnProperty('song') &&
       id !== this.audioPlaying.song.id
     ) {
-      this.audioPlaying.isPause = false;
-      this.audioPlayingService.currentAudioPlaying$.next(this.audioPlaying);
+      isPause = false;
     }
 
-    this.currentSongId = id;
-
-    const audioPlaying = {
+    const audioPlaying: AudioPlaying = {
       ...this.audioPlaying,
       song: {
         id,
         ...song,
       },
-      isPause: !this.isPause,
+      playPause: {
+        isPause: !isPause,
+        playing: isPlaying,
+      },
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
@@ -138,6 +145,13 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   isActiveSong(songIndex: number): string {
     if (!this.audioPlaying.hasOwnProperty('song')) {
       return 'inactive-image';
+    }
+
+    if (
+      this.audioPlaying.song.id === songIndex &&
+      this.audioPlaying.playPause.playing
+    ) {
+      return 'active-playing';
     }
 
     return this.audioPlaying.song.id === songIndex && this.isPause
@@ -200,13 +214,15 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     song = this.songs[id];
 
-    const audioPlaying = {
+    const audioPlaying: AudioPlaying = {
       ...this.audioPlaying,
       song: {
         id,
         ...song,
       },
-      isPause: true,
+      playPause: {
+        isPause: true,
+      },
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
@@ -234,6 +250,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.swiper.slideToLoop(songId);
       this.swiper.slideNext();
     }
+
+    this.swiper.slideToLoop(songId);
   }
 
   private isChangeSizeWindow(

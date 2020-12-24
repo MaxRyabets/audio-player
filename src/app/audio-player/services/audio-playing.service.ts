@@ -13,7 +13,10 @@ export class AudioPlayingService {
 
   private readonly defaultAudioPlaying: AudioPlaying = {
     idList: 0,
-    isPause: false,
+    playPause: {
+      isPause: false,
+      playing: false,
+    },
   };
 
   audioPlaying =
@@ -31,7 +34,10 @@ export class AudioPlayingService {
     return {
       idList: currentPlayingSong.idList,
       song: currentPlayingSong.song,
-      isPause: true,
+      playPause: {
+        isPause: false,
+        playing: true,
+      },
       timestamp: currentPlayingSong.timeStamp,
     };
   }
