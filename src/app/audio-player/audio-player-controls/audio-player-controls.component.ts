@@ -157,17 +157,6 @@ export class AudioPlayerControlsComponent
         }
 
         this.playPause();
-        /*if (!this.storage.getLength()) {
-          this.playPause();
-        }*/
-
-        /*this.audio.play().then(() => {
-          console.log('TORORLROLO');
-          catchError((error) => {
-            console.log(error);
-            return error;
-          });
-        });*/
       })
     );
   }
