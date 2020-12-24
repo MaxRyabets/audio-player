@@ -4,8 +4,8 @@ import {Song} from './shared/song';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
-import {SongAdapterService} from './core/song-adapter.service';
-import {SongModel} from './core/song.model';
+import {SongAdapterService} from './song-adapter.service';
+import {SongModel} from './song.model';
 
 interface SongsResults {
   results: Song[];

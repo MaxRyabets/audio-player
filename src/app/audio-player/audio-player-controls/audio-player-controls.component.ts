@@ -16,6 +16,8 @@ import {takeUntil, tap} from 'rxjs/operators';
 import {Timestamp} from '../shared/timestamp';
 import {AudioPlayingService} from '../audio-playing.service';
 import {AudioPlaying} from '../shared/audio-playing';
+import {PlayingSong} from '../playing-song';
+import {StorageService} from '../storage.service';
 
 @Component({
   selector: 'app-audio-players-controls',
@@ -53,14 +55,15 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private audioPlayingService: AudioPlayingService
+    private audioPlayingService: AudioPlayingService,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
     this.audioPlayingService.currentAudioPlaying$.asObservable().pipe(
       takeUntil(this.destroy$),
       tap((audioPlaying) => {
-        console.log(sessionStorage.getItem('audioPlaying'));
+        console.log(this.storageService.getItem('audioPlaying'));
 
         if (this.isCurrentSongPlaying(audioPlaying.song)) {
           this.playPause();
@@ -180,7 +183,7 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
       takeUntil(this.destroy$),
       tap(() => {
         if (this.audio.currentTime === this.audio.duration) {
-          /*this.emitNextTrack.emit(this.song.id);*/
+          this.emitNextTrack.emit(this.currentPlayingSongId + 1);
           this.audio.pause();
 
           return;
@@ -198,13 +201,13 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
           return;
         }
 
-        const currentPlayingSong = {
+        const currentPlayingSong: PlayingSong = {
           idList: this.audioPlaying.idList,
           idSong: this.audioPlaying.song.id,
           timeStamp: this.audio.currentTime
         };
 
-        sessionStorage.setItem('audioPlaying', JSON.stringify(currentPlayingSong));
+        this.storageService.setItem('audioPlaying', JSON.stringify(currentPlayingSong));
 
         this.progressBarValue = currentTimeAudioPlayed;
         this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
