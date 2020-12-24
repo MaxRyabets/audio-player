@@ -1,6 +1,7 @@
+import { Song } from './song';
+
 export interface PlayingSong {
   idList: number;
-  idSong: number;
+  song: Song;
   timeStamp: number;
 }
-

@@ -5,27 +5,30 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import {Song} from '../shared/song';
-import {fromEvent, merge, Observable, Subject} from 'rxjs';
-import {takeUntil, tap} from 'rxjs/operators';
-import {Timestamp} from '../shared/timestamp';
-import {AudioPlayingService} from '../audio-playing.service';
-import {AudioPlaying} from '../shared/audio-playing';
-import {PlayingSong} from '../playing-song';
-import {StorageService} from '../storage.service';
+import { Song } from '../interfaces/song';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
+import { catchError, takeUntil, tap } from 'rxjs/operators';
+import { Timestamp } from './timestamp';
+import { AudioPlayingService } from '../services/audio-playing.service';
+import { AudioPlaying } from '../interfaces/audio-playing';
+import { PlayingSong } from '../interfaces/playing-song';
+import { StorageInterface } from '../interfaces/storage.interface';
+import { BROWSER_STORAGE } from '../storage-injection-token';
 
 @Component({
   selector: 'app-audio-players-controls',
   templateUrl: './audio-player-controls.component.html',
   styleUrls: ['./audio-player-controls.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AudioPlayerControlsComponent
+  implements OnInit, AfterViewInit, OnDestroy {
   audioPlaying: AudioPlaying;
 
   currentPlayingSongId: number;
@@ -56,28 +59,31 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
   constructor(
     private cdRef: ChangeDetectorRef,
     private audioPlayingService: AudioPlayingService,
-    private storageService: StorageService
-  ) {}
+    @Inject(BROWSER_STORAGE) private storage: StorageInterface
+  ) {
+    this.audio.autoplay = true;
+  }
 
   ngOnInit(): void {
-    this.audioPlayingService.currentAudioPlaying$.asObservable().pipe(
-      takeUntil(this.destroy$),
-      tap((audioPlaying) => {
-        console.log(this.storageService.getItem('audioPlaying'));
+    this.audioPlayingService.currentAudioPlaying$
+      .asObservable()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((audioPlaying) => {
+          if (this.isCurrentSongPlaying(audioPlaying.song)) {
+            this.playPause();
+            this.cdRef.detectChanges();
 
-        if (this.isCurrentSongPlaying(audioPlaying.song)) {
-          this.playPause();
-          this.cdRef.detectChanges();
+            return;
+          }
 
-          return;
-        }
+          this.currentPlayingSongId = audioPlaying.song.id;
+          this.audioPlaying = audioPlaying;
 
-        this.currentPlayingSongId = audioPlaying.song.id;
-        this.audioPlaying = audioPlaying;
-
-        this.resetAudioPlayer(this.audioPlaying.song);
-      })
-    ).subscribe();
+          this.resetAudioPlayer(this.audioPlaying.song);
+        })
+      )
+      .subscribe();
   }
 
   nextTrack(): void {
@@ -131,10 +137,24 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
     return fromEvent(this.audio, 'loadeddata').pipe(
       takeUntil(this.destroy$),
       tap(() => {
-        this.duration.nativeElement.textContent = this.convertDuration(this.audio.duration);
-        this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.duration.nativeElement.textContent = this.convertDuration(
+          this.audio.duration
+        );
+        this.currentTimeElement.textContent = this.convertDuration(
+          this.audio.currentTime
+        );
 
-        this.playPause();
+        if (!this.storage.getLength()) {
+          this.playPause();
+        }
+
+        /*this.audio.play().then(() => {
+          console.log('TORORLROLO');
+          catchError((error) => {
+            console.log(error);
+            return error;
+          });
+        });*/
       })
     );
   }
@@ -144,7 +164,9 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
       return '00:00';
     }
 
-    const audioMinutesSeconds: Timestamp = this.convertToMinutesAndSeconds(time);
+    const audioMinutesSeconds: Timestamp = this.convertToMinutesAndSeconds(
+      time
+    );
 
     return [
       audioMinutesSeconds.minutes.toString().padStart(2, '0'),
@@ -170,7 +192,9 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
 
         this.audio.currentTime = percent * this.audio.duration;
         this.progressBarValue = Math.floor(percent * 100);
-        this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.currentTimeElement.textContent = this.convertDuration(
+          this.audio.currentTime
+        );
 
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
         this.cdRef.detectChanges();
@@ -203,14 +227,19 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
 
         const currentPlayingSong: PlayingSong = {
           idList: this.audioPlaying.idList,
-          idSong: this.audioPlaying.song.id,
-          timeStamp: this.audio.currentTime
+          song: this.audioPlaying.song,
+          timeStamp: this.audio.currentTime,
         };
 
-        this.storageService.setItem('audioPlaying', JSON.stringify(currentPlayingSong));
+        this.storage.setItem(
+          'audioPlaying',
+          JSON.stringify(currentPlayingSong)
+        );
 
         this.progressBarValue = currentTimeAudioPlayed;
-        this.currentTimeElement.textContent = this.convertDuration(this.audio.currentTime);
+        this.currentTimeElement.textContent = this.convertDuration(
+          this.audio.currentTime
+        );
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
 
         this.cdRef.detectChanges();
@@ -230,19 +259,27 @@ export class AudioPlayerControlsComponent implements OnInit, AfterViewInit, OnDe
         }
 
         this.audio.volume = percentVolume;
-        this.volumePercentage.nativeElement.style.width = `${percentVolume * 100}%`;
+        this.volumePercentage.nativeElement.style.width = `${
+          percentVolume * 100
+        }%`;
       })
     );
   }
 
   private resetAudioPlayer(song: Song): void {
-    this.audio.pause();
-    this.audio.src = song.previewUrl;
-    this.progressBarValue = 0;
+    if (!this.storage.getLength()) {
+      this.audio.pause();
+      this.progressBarValue = 0;
+    }
+
+    this.audio.src = this.audioPlaying.song.previewUrl;
     this.audio.volume = 0.5;
   }
 
   private isCurrentSongPlaying(song: Song): boolean {
-    return this.currentPlayingSongId !== undefined && this.currentPlayingSongId === song.id;
+    return (
+      this.currentPlayingSongId !== undefined &&
+      this.currentPlayingSongId === song.id
+    );
   }
 }
