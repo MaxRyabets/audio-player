@@ -68,7 +68,7 @@ export class AudioPlayerControlsComponent
       .pipe(
         takeUntil(this.destroy$),
         tap((audioPlaying) => {
-          if (this.isCurrentSongPlaying(audioPlaying.song)) {
+          if (this.isCurrentSongPlaying(audioPlaying.song.id)) {
             this.playPause();
             this.cdRef.detectChanges();
 
@@ -78,7 +78,7 @@ export class AudioPlayerControlsComponent
           this.currentPlayingSongId = audioPlaying.song.id;
           this.audioPlaying = audioPlaying;
 
-          this.resetAudioPlayer(this.audioPlaying.song);
+          this.resetAudioPlayer();
         })
       )
       .subscribe();
@@ -106,7 +106,7 @@ export class AudioPlayerControlsComponent
       ...this.audioPlaying,
       playPause: {
         isPause,
-        playing: isPlaying,
+        isPlaying,
       },
     };
 
@@ -152,7 +152,7 @@ export class AudioPlayerControlsComponent
           this.audio.currentTime
         );
 
-        if (this.audioPlaying.playPause.playing) {
+        if (this.audioPlaying.playPause.isPlaying) {
           return;
         }
 
@@ -259,7 +259,7 @@ export class AudioPlayerControlsComponent
     );
   }
 
-  private resetAudioPlayer(song: Song): void {
+  private resetAudioPlayer(): void {
     this.audio.pause();
     this.progressBarValue = 0;
 
@@ -267,10 +267,10 @@ export class AudioPlayerControlsComponent
     this.audio.volume = 0.5;
   }
 
-  private isCurrentSongPlaying(song: Song): boolean {
+  private isCurrentSongPlaying(id: number): boolean {
     return (
       this.currentPlayingSongId !== undefined &&
-      this.currentPlayingSongId === song.id
+      this.currentPlayingSongId === id
     );
   }
 

@@ -77,9 +77,9 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClickSong(id: number, song: Song): void {
-    let isPlaying = this.audioPlaying.playPause.playing;
+    let isPlaying = this.audioPlaying.playPause.isPlaying;
 
-    if (this.audioPlaying.playPause.playing) {
+    if (this.audioPlaying.playPause.isPlaying) {
       isPlaying = false;
     }
 
@@ -100,7 +100,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       playPause: {
         isPause: !isPause,
-        playing: isPlaying,
+        isPlaying,
       },
     };
 
@@ -149,7 +149,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (
       this.audioPlaying.song.id === songIndex &&
-      this.audioPlaying.playPause.playing
+      this.audioPlaying.playPause.isPlaying
     ) {
       return 'active-playing';
     }

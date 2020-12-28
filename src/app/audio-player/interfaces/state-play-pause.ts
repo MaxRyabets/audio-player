@@ -1,4 +1,4 @@
 export interface StatePlayPause {
   isPause?: boolean;
-  playing?: boolean;
+  isPlaying?: boolean;
 }

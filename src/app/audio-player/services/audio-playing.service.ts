@@ -15,7 +15,7 @@ export class AudioPlayingService {
     idList: 0,
     playPause: {
       isPause: false,
-      playing: false,
+      isPlaying: false,
     },
   };
 
@@ -36,7 +36,7 @@ export class AudioPlayingService {
       song: currentPlayingSong.song,
       playPause: {
         isPause: false,
-        playing: true,
+        isPlaying: true,
       },
       timestamp: currentPlayingSong.timeStamp,
     };
