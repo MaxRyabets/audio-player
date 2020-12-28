@@ -1,14 +1,20 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {AudioPlayingService} from './audio-playing.service';
-import {takeUntil, tap} from 'rxjs/operators';
-import {Subject} from 'rxjs';
-import {AudioPlaying} from './shared/audio-playing';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { AudioPlayingService } from './services/audio-playing.service';
+import { takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { AudioPlaying } from './interfaces/audio-playing';
 
 @Component({
   selector: 'app-audio-player',
   templateUrl: './audio-player.component.html',
   styleUrls: ['./audio-player.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
   audioPlaying: AudioPlaying;
@@ -17,14 +23,17 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private audioPlayingService: AudioPlayingService,
+    private audioPlayingService: AudioPlayingService
   ) {}
 
   ngOnInit(): void {
-    this.audioPlayingService.currentAudioPlaying$.asObservable().pipe(
-      takeUntil(this.destroy$),
-      tap((audioPlaying) => this.audioPlaying = audioPlaying)
-    ).subscribe();
+    this.audioPlayingService.currentAudioPlaying$
+      .asObservable()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((audioPlaying) => (this.audioPlaying = audioPlaying))
+      )
+      .subscribe();
   }
 
   ngOnDestroy(): void {
