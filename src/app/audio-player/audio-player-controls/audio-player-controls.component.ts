@@ -189,10 +189,11 @@ export class AudioPlayerControlsComponent
     return fromEvent(this.progressAudio, 'click').pipe(
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
-        const percent = event.offsetX / this.progressAudio.offsetWidth;
+        const percentProgressAudio =
+          event.offsetX / this.progressAudio.offsetWidth;
 
-        this.audio.currentTime = percent * this.audio.duration;
-        this.progressBarValue = Math.floor(percent * 100);
+        this.audio.currentTime = percentProgressAudio * this.audio.duration;
+        this.progressBarValue = Math.floor(percentProgressAudio * 100);
         this.currentTimeElement.textContent = this.convertDuration(
           this.audio.currentTime
         );
@@ -218,17 +219,17 @@ export class AudioPlayerControlsComponent
           return;
         }
 
-        const currentTimeAudioPlayed = Math.floor(
+        const currentAudioPlaybackTime = Math.floor(
           (100 / this.audio.duration) * this.audio.currentTime
         );
 
-        if (isNaN(currentTimeAudioPlayed)) {
+        if (isNaN(currentAudioPlaybackTime)) {
           return;
         }
 
         this.setSavePlay();
 
-        this.progressBarValue = currentTimeAudioPlayed;
+        this.progressBarValue = currentAudioPlaybackTime;
         this.currentTimeElement.textContent = this.convertDuration(
           this.audio.currentTime
         );
@@ -243,8 +244,8 @@ export class AudioPlayerControlsComponent
     return fromEvent(this.audioVolume.nativeElement, 'click').pipe(
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
-        const volumeWidth = this.audioVolume.nativeElement.offsetWidth;
-        const percentVolume = event.offsetX / volumeWidth;
+        const offsetWidth = this.audioVolume.nativeElement.offsetWidth;
+        const percentVolume = event.offsetX / offsetWidth;
 
         if (percentVolume < 0) {
           return;
@@ -274,12 +275,12 @@ export class AudioPlayerControlsComponent
   }
 
   private setSavePlay(): void {
-    const currentPlayingSong: PlayingSong = {
+    const currentlyPlayingSong: PlayingSong = {
       idList: this.audioPlaying.idList,
       song: this.audioPlaying.song,
       timeStamp: this.audio.currentTime,
     };
 
-    this.storage.setItem('audioPlaying', JSON.stringify(currentPlayingSong));
+    this.storage.setItem('audioPlaying', JSON.stringify(currentlyPlayingSong));
   }
 }
