@@ -26,7 +26,7 @@
     <!-- start col-audio-player-basic-controls -->
     <section class="col-audio-player-basic-controls">
 
-      <button class="btn btn-audio-prev" (click)="prevTrack()">
+      <button class="btn btn-audio-prev" (click)="prevSong()">
         <img src="../../../assets/images/audio-player/btn-play-prev.svg" alt="play-prev"/>
       </button>
 
@@ -35,7 +35,7 @@
         <img *ngIf="!audio.paused" src="../../../assets/images/audio-list/btn-pause.svg" alt="pause">
       </button>
 
-      <button class="btn btn-audio-next" (click)="nextTrack()">
+      <button class="btn btn-audio-next" (click)="nextSong()">
         <img src="../../../assets/images/audio-player/btn-play-next.svg" alt="audio-play"/>
       </button>
 

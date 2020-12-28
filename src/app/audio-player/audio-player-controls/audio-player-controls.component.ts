@@ -11,7 +11,6 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Song } from '../interfaces/song';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { Timestamp } from './timestamp';
@@ -38,8 +37,8 @@ export class AudioPlayerControlsComponent
 
   audio = new Audio();
 
-  @Output() emitNextTrack = new EventEmitter<number>();
-  @Output() emitPrevTrack = new EventEmitter<number>();
+  @Output() emitNextSong = new EventEmitter<number>();
+  @Output() emitPrevSong = new EventEmitter<number>();
 
   @ViewChild('audioPlayer') audioPlayer: ElementRef;
   @ViewChild('duration') duration: ElementRef;
@@ -84,12 +83,12 @@ export class AudioPlayerControlsComponent
       .subscribe();
   }
 
-  nextTrack(): void {
-    this.emitNextTrack.emit(this.currentPlayingSongId + 1);
+  nextSong(): void {
+    this.emitNextSong.emit(this.currentPlayingSongId + 1);
   }
 
-  prevTrack(): void {
-    this.emitPrevTrack.emit(this.currentPlayingSongId - 1);
+  prevSong(): void {
+    this.emitPrevSong.emit(this.currentPlayingSongId - 1);
   }
 
   onClickTitlePlay(): void {
@@ -209,7 +208,7 @@ export class AudioPlayerControlsComponent
       takeUntil(this.destroy$),
       tap(() => {
         if (this.audio.currentTime === this.audio.duration) {
-          this.emitNextTrack.emit(this.currentPlayingSongId + 1);
+          this.emitNextSong.emit(this.currentPlayingSongId + 1);
           this.audio.pause();
 
           return;

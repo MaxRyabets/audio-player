@@ -41,11 +41,11 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  nextTrack(id: number): void {
+  nextSong(id: number): void {
     this.songId = id;
   }
 
-  prevTrack(id): void {
+  prevSong(id): void {
     this.songId = id;
   }
 }

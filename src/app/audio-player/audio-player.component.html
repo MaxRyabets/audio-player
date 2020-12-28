@@ -4,8 +4,8 @@
 
 <section class="container-player container-audio-player" *ngIf="audioPlaying.song">
   <app-audio-players-controls
-    (emitNextTrack)="nextTrack($event)"
-    (emitPrevTrack)="prevTrack($event)"
+    (emitNextSong)="nextSong($event)"
+    (emitPrevSong)="prevSong($event)"
   ></app-audio-players-controls>
 </section>
 
