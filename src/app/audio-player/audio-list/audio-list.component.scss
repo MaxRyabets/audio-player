@@ -86,6 +86,10 @@
     opacity: unset;
     top: 150px;
 
+    &:hover {
+      filter: brightness(0) invert(1);
+    }
+
     &:after {
       color: #2B3244;
       font-size: 25px;
