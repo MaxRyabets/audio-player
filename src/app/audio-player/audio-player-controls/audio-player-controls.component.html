@@ -1,9 +1,6 @@
 <section #audioPlayer class="container audio-player">
 
-  <!-- start row-audio-player -->
   <article class="row-audio-player">
-
-    <!-- start col-audio-player-title -->
     <section class="col-audio-player-title">
 
       <div class="container-title-img-btn">
@@ -21,11 +18,8 @@
       </div>
 
     </section>
-    <!-- end col-audio-player-title -->
 
-    <!-- start col-audio-player-basic-controls -->
     <section class="col-audio-player-basic-controls">
-
       <button class="btn btn-audio-prev" (click)="prevSong()">
         <img src="../../../assets/images/audio-player/btn-play-prev.svg" alt="play-prev"/>
       </button>
@@ -38,11 +32,8 @@
       <button class="btn btn-audio-next" (click)="nextSong()">
         <img src="../../../assets/images/audio-player/btn-play-next.svg" alt="audio-play"/>
       </button>
-
     </section>
-    <!-- end col-audio-player-basic-controls -->
 
-    <!-- start col-audio-player-other-controls -->
     <section class="col-audio-player-other-controls">
 
       <span class="audio-current-duration-time"><span #currentTime></span> / <span #duration></span> </span>
@@ -60,10 +51,8 @@
       </button>
 
     </section>
-    <!-- end col-audio-player-other-controls -->
 
   </article>
-  <!-- end row-audio-player -->
 
   <div class="row-audio-player-progress-bar">
     <progress
