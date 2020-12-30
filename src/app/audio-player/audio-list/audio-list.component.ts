@@ -30,9 +30,9 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   private localSongs: Song[] = [];
   private localAudioPlaying: AudioPlaying;
 
-  isPause = false;
+  private isPause = false;
 
-  swiper: Swiper;
+  private swiper: Swiper;
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
 
