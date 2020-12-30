@@ -172,6 +172,12 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
           this.audio.currentTime
         );
 
+        this.setSavePlay();
+
+        if (this.storage.getLength()) {
+          this.updateTimeLineFromStorage();
+        }
+
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
         this.changeDetectorRef.detectChanges();
       })
@@ -259,6 +265,10 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   }
 
   private play(): void {
+    if (this.storage.getLength()) {
+      this.updateTimeLineFromStorage();
+    }
+
     const isPlaying = false;
     const isPause = this.audio.paused;
 
@@ -272,5 +282,13 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
     this.changeDetectorRef.detectChanges();
+  }
+
+  private updateTimeLineFromStorage(): void {
+    const currentPlayingSong: PlayingSong = JSON.parse(
+      this.storage.getItem('audioPlaying')
+    );
+
+    this.audio.currentTime = currentPlayingSong.timeStamp;
   }
 }
