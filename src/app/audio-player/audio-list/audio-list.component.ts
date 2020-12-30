@@ -61,6 +61,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    console.log('songId', songId);
+
     this.autoChangeSlide(songId);
 
     this.setNextPrevSong(songId);
@@ -82,7 +84,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     fromEvent(window, 'resize')
       .pipe(
         takeUntil(this.destroy$),
-        filter(() => this.swiper !== undefined),
+        filter(() => this.swiper.hasOwnProperty('clickedSlide')),
         tap(() => this.swiper.slideToLoop(this.audioPlaying.song.id))
       )
       .subscribe();
