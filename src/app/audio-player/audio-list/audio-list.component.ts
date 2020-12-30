@@ -10,7 +10,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Song } from '../interfaces/song';
-import { AudioPlayerService } from '../services/audio-player.service';
 import SwiperCore, { Navigation, Pagination } from 'swiper/core';
 import Swiper from 'swiper';
 import { fromEvent, Subject } from 'rxjs';
@@ -27,7 +26,7 @@ import { AudioPlaying } from '../interfaces/audio-playing';
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
-  private localSongs: Song[] = [];
+  @Input() songs: Song[];
   private localAudioPlaying: AudioPlaying;
 
   private isPause = false;
@@ -47,15 +46,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.changeDetectorRef.detectChanges();
   }
 
-  get songs(): Song[] {
-    return this.localSongs;
-  }
-
-  @Input() set songs(songs: Song[]) {
-    this.localSongs = songs;
-    this.changeDetectorRef.detectChanges();
-  }
-
   @Input() set songId(songId: number) {
     if (songId === undefined) {
       return;
@@ -67,7 +57,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private audioService: AudioPlayerService,
+    private elementRef: ElementRef,
     private audioPlayingService: AudioPlayingService,
     private changeDetectorRef: ChangeDetectorRef
   ) {
@@ -132,9 +122,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.swiper = new Swiper(this.swiperContainer.nativeElement, {
       loop: true,
       observer: true,
-      loopFillGroupWithBlank: true,
-      watchSlidesProgress: true,
-      watchSlidesVisibility: true,
+      slidesPerView: 1,
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
@@ -144,20 +132,25 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
         prevEl: '.swiper-button-prev',
       },
       breakpoints: {
-        '@0.75': {
+        576: {
+          slidesPerView: 1,
+          spaceBetween: 20,
+        },
+        768: {
           slidesPerView: 2,
           spaceBetween: 20,
-          slidesPerGroup: 2,
         },
-        '@1.00': {
+        992: {
           slidesPerView: 3,
           spaceBetween: 30,
-          slidesPerGroup: 3,
         },
-        '@1.50': {
+        1199: {
+          slidesPerView: 4,
+          spaceBetween: 30,
+        },
+        1200: {
           slidesPerView: 5,
           spaceBetween: 30,
-          slidesPerGroup: 5,
         },
       },
     });
