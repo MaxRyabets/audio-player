@@ -18,8 +18,6 @@ import { filter, takeUntil, tap } from 'rxjs/operators';
 import { AudioPlayingService } from '../services/audio-playing.service';
 import { AudioPlaying } from '../interfaces/audio-playing';
 
-SwiperCore.use([Navigation, Pagination]);
-
 @Component({
   selector: 'app-audio-list',
   templateUrl: './audio-list.component.html',
@@ -31,13 +29,13 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   isPause = false;
   audioPlaying: AudioPlaying;
 
-  readonly breakPointSmallWindow = '@0.75';
-  readonly breakPointMiddleWindow = '@1.00';
-  readonly breakPointBigWindow = '@1.50';
+  private readonly breakPointSmallWindow = '@0.75';
+  private readonly breakPointMiddleWindow = '@1.00';
+  private readonly breakPointBigWindow = '@1.50';
 
   swiper: Swiper;
 
-  destroy$ = new Subject();
+  private readonly destroy$ = new Subject();
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
   @Input() set songId(songId: number) {
@@ -53,8 +51,10 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private audioService: AudioPlayerService,
     private audioPlayingService: AudioPlayingService,
-    private cdRef: ChangeDetectorRef
-  ) {}
+    private changeDetectorRef: ChangeDetectorRef
+  ) {
+    SwiperCore.use([Navigation, Pagination]);
+  }
 
   ngOnInit(): void {
     this.getSongs();
@@ -66,10 +66,27 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.isPause = audioPlaying.playPause.isPause;
           this.audioPlaying = audioPlaying;
 
-          this.cdRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
         })
       )
       .subscribe();
+  }
+
+  ngAfterViewInit(): void {
+    fromEvent(window, 'resize')
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(() => this.swiper !== undefined),
+        tap(() => {
+          this.swiper.slideToLoop(this.audioPlaying.song.id);
+        })
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   trackByFn(index, song): number {
@@ -167,23 +184,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.audioPlaying.song.id === index && this.isPause;
   }
 
-  ngAfterViewInit(): void {
-    fromEvent(window, 'resize')
-      .pipe(
-        takeUntil(this.destroy$),
-        filter(() => this.swiper.clickedSlide !== undefined),
-        tap(() => {
-          this.swiper.slideToLoop(this.audioPlaying.song.id);
-        })
-      )
-      .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   private getSongs(): void {
     this.audioService
       .getITunesSongs()
@@ -191,7 +191,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
         takeUntil(this.destroy$),
         tap((songs) => {
           this.songs = songs;
-          this.cdRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
 
           this.initSwiper();
         })

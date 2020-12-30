@@ -116,7 +116,6 @@
     width: 100%;
   }
 
-
   .container-pagination {
     position: relative;
   }
@@ -130,3 +129,8 @@
   cursor: pointer;
 }
 
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

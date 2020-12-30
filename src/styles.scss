@@ -2,7 +2,6 @@
 @import '~normalize.css';
 @import "assets/css/fonts";
 @import "assets/css/grid";
-@import "assets/css/swiper-setting";
 
 body {
   min-width: 600px;
@@ -10,4 +9,13 @@ body {
   font-family: 'RobotoLight', sans-serif;
 }
 
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background: #000000;
+}
+
+.swiper-pagination-bullet {
+  margin: 0 4px;
+  background: #fff;
+  opacity: unset;
+}
 

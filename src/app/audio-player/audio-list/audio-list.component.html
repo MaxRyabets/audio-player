@@ -1,15 +1,10 @@
 <section class="container container-audio-list">
 
-  <!-- start audio-player-controls list title -->
   <div class="audio-list-title">
     <h3>Surprise Me</h3>
   </div>
-  <!-- end audio-player-controls list title -->
 
-  <!-- start swiper container -->
   <div #swiperContainer class="swiper-container">
-
-    <!-- start swiper wrapper -->
     <div class="swiper-wrapper">
         <div class="song swiper-slide"
              *ngFor="let song of songs; index as i;
@@ -33,19 +28,12 @@
           </div>
         </div>
     </div>
-    <!-- end swiper wrapper -->
-
   </div>
-  <!-- start swiper container -->
 
-  <!-- start swiper pagination -->
   <div class="container-pagination">
     <div class="swiper-pagination"></div>
   </div>
-  <!-- end swiper pagination -->
 
-  <!-- start swiper navigation buttons -->
   <div class="swiper-button-prev"></div>
   <div class="swiper-button-next"></div>
-  <!-- end swiper navigation buttons -->
 </section>
