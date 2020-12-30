@@ -145,24 +145,18 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       return '00:00';
     }
 
-    const audioMinutesSeconds: Timestamp = this.convertToMinutesAndSeconds(
-      time
-    );
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    const audioMinutesSeconds: Timestamp = {
+      minutes,
+      seconds,
+    };
 
     return [
       audioMinutesSeconds.minutes.toString().padStart(2, '0'),
       audioMinutesSeconds.seconds.toString().padStart(2, '0'),
     ].join(':');
-  }
-
-  private convertToMinutesAndSeconds(timestamp): Timestamp {
-    const minutes = Math.floor(timestamp / 60);
-    const seconds = Math.floor(timestamp % 60);
-
-    return {
-      minutes,
-      seconds,
-    };
   }
 
   private clickOnProgressBar(): Observable<MouseEvent> {
