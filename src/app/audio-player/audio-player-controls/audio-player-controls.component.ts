@@ -49,7 +49,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     return this.currentTime.nativeElement;
   }
 
-  get progressAudio(): any {
+  get progressBarElement(): any {
     return this.progressBar.nativeElement;
   }
 
@@ -160,11 +160,11 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   }
 
   private clickOnProgressBar(): Observable<MouseEvent> {
-    return fromEvent(this.progressAudio, 'click').pipe(
+    return fromEvent(this.progressBarElement, 'click').pipe(
       takeUntil(this.destroy$),
       tap((event: MouseEvent) => {
         const percentProgressAudio =
-          event.offsetX / this.progressAudio.offsetWidth;
+          event.offsetX / this.progressBarElement.offsetWidth;
 
         this.audio.currentTime = percentProgressAudio * this.audio.duration;
         this.progressBarValue = Math.floor(percentProgressAudio * 100);
@@ -178,7 +178,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
           this.updateTimeLineFromStorage();
         }
 
-        this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
+        this.progressBarElement.innerHTML = `${this.progressBarValue}% played`;
         this.changeDetectorRef.detectChanges();
       })
     );
@@ -213,7 +213,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
         this.currentTimeElement.textContent = this.convertDuration(
           this.audio.currentTime
         );
-        this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
+        this.progressBarElement.innerHTML = `${this.progressBarValue}% played`;
 
         this.changeDetectorRef.detectChanges();
       })
