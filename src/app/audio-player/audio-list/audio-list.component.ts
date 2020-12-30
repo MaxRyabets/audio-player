@@ -25,13 +25,13 @@ import { AudioPlaying } from '../interfaces/audio-playing';
 })
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject();
-
-  @Input() songs: Song[];
   private localAudioPlaying: AudioPlaying;
 
   private isPause = false;
 
   private swiper: Swiper;
+
+  @Input() songs: Song[];
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
 
