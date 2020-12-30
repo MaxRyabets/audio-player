@@ -28,13 +28,24 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
   private localSongs: Song[] = [];
+  private localAudioPlaying: AudioPlaying;
 
   isPause = false;
-  audioPlaying: AudioPlaying;
 
   swiper: Swiper;
 
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
+
+  get audioPlaying(): AudioPlaying {
+    return this.localAudioPlaying;
+  }
+
+  @Input() set audioPlaying(audioPlaying: AudioPlaying) {
+    this.localAudioPlaying = audioPlaying;
+    this.isPause = audioPlaying.playPause.isPause;
+
+    this.changeDetectorRef.detectChanges();
+  }
 
   get songs(): Song[] {
     return this.localSongs;
@@ -65,19 +76,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.initSwiper();
-
-    this.audioPlayingService.currentAudioPlaying$
-      .asObservable()
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((audioPlaying: AudioPlaying) => {
-          this.isPause = audioPlaying.playPause.isPause;
-          this.audioPlaying = audioPlaying;
-
-          this.changeDetectorRef.detectChanges();
-        })
-      )
-      .subscribe();
   }
 
   ngAfterViewInit(): void {
@@ -85,9 +83,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         filter(() => this.swiper !== undefined),
-        tap(() => {
-          this.swiper.slideToLoop(this.audioPlaying.song.id);
-        })
+        tap(() => this.swiper.slideToLoop(this.audioPlaying.song.id))
       )
       .subscribe();
   }

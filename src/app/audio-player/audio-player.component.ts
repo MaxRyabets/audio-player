@@ -33,14 +33,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getSongs();
-
-    this.audioPlayingService.currentAudioPlaying$
-      .asObservable()
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((audioPlaying) => (this.audioPlaying = audioPlaying))
-      )
-      .subscribe();
+    this.setAudioPlaying();
   }
 
   ngOnDestroy(): void {
@@ -67,5 +60,18 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   prevSong(id): void {
     this.songId = id;
+  }
+
+  private setAudioPlaying(): void {
+    this.audioPlayingService.currentAudioPlaying$
+      .asObservable()
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((audioPlaying) => {
+          this.audioPlaying = audioPlaying;
+          this.changeDetectorRef.detectChanges();
+        })
+      )
+      .subscribe();
   }
 }
