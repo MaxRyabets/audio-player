@@ -6,7 +6,7 @@
   ></app-audio-list>
 </section>
 
-<section class="container-player container-audio-player" *ngIf="audioPlaying.song">
+<section class="container-player container-audio-player" *ngIf="isHasPropertySong()">
   <app-audio-players-controls
     [audioPlaying]="audioPlaying"
     (emitNextSong)="nextSong($event)"

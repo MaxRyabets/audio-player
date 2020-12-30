@@ -62,6 +62,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.songId = id;
   }
 
+  isHasPropertySong(): boolean {
+    return this.audioPlaying.hasOwnProperty('song');
+  }
+
   private setAudioPlaying(): void {
     this.audioPlayingService.currentAudioPlaying$
       .asObservable()
