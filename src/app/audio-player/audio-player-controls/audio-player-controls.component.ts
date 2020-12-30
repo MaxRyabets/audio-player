@@ -60,7 +60,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   @Input() set audioPlaying(audioPlaying: AudioPlaying) {
     if (this.isCurrentSongPlaying(audioPlaying.song.id)) {
       this.playPause();
-      this.cdRef.detectChanges();
+      this.changeDetectorRef.detectChanges();
 
       return;
     }
@@ -72,7 +72,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor(
-    private cdRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private audioPlayingService: AudioPlayingService,
     @Inject(BROWSER_STORAGE) private storage: StorageInterface
   ) {}
@@ -173,7 +173,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
         );
 
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
-        this.cdRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       })
     );
   }
@@ -209,7 +209,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
         );
         this.progressAudio.innerHTML = `${this.progressBarValue}% played`;
 
-        this.cdRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       })
     );
   }
@@ -271,6 +271,6 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
-    this.cdRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
   }
 }
