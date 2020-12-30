@@ -61,8 +61,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    console.log('songId', songId);
-
     this.autoChangeSlide(songId);
 
     this.setNextPrevSong(songId);
