@@ -25,19 +25,26 @@ import { AudioPlaying } from '../interfaces/audio-playing';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
-  songs: Song[] = [];
+  private readonly destroy$ = new Subject();
+
+  private localSongs: Song[] = [];
+
   isPause = false;
   audioPlaying: AudioPlaying;
 
-  private readonly breakPointSmallWindow = '@0.75';
-  private readonly breakPointMiddleWindow = '@1.00';
-  private readonly breakPointBigWindow = '@1.50';
-
   swiper: Swiper;
 
-  private readonly destroy$ = new Subject();
-
   @ViewChild('swiperContainer') swiperContainer: ElementRef;
+
+  get songs(): Song[] {
+    return this.localSongs;
+  }
+
+  @Input() set songs(songs: Song[]) {
+    this.localSongs = songs;
+    this.changeDetectorRef.detectChanges();
+  }
+
   @Input() set songId(songId: number) {
     if (songId === undefined) {
       return;
@@ -57,7 +64,8 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getSongs();
+    this.initSwiper();
+
     this.audioPlayingService.currentAudioPlaying$
       .asObservable()
       .pipe(
@@ -184,21 +192,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.audioPlaying.song.id === index && this.isPause;
   }
 
-  private getSongs(): void {
-    this.audioService
-      .getITunesSongs()
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((songs) => {
-          this.songs = songs;
-          this.changeDetectorRef.detectChanges();
-
-          this.initSwiper();
-        })
-      )
-      .subscribe();
-  }
-
   private setNextPrevSong(songId: number): void {
     let song: Song;
     const songsLength = this.songs.length;
@@ -229,11 +222,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private autoChangeSlide(songId: number): void {
-    const currentBreakpoint = this.swiperContainer.nativeElement.swiper
-      .currentBreakpoint;
-    const slidesPerView = this.swiperContainer.nativeElement.swiper.params
-      .slidesPerView;
-
     if (songId === 0 || this.songs.length === songId) {
       this.swiper.slideToLoop(0);
 
@@ -246,25 +234,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.isChangeSizeWindow(currentBreakpoint, songId, slidesPerView)) {
-      this.swiper.slideToLoop(songId);
-      this.swiper.slideNext();
-    }
-
     this.swiper.slideToLoop(songId);
-  }
-
-  private isChangeSizeWindow(
-    currentBreakpoint: string,
-    songId: number,
-    slidesPerView: number
-  ): boolean {
-    return (
-      (this.breakPointBigWindow === currentBreakpoint &&
-        songId % slidesPerView === 0) ||
-      (this.breakPointMiddleWindow === currentBreakpoint &&
-        songId % slidesPerView === 0) ||
-      this.breakPointSmallWindow === currentBreakpoint
-    );
   }
 }

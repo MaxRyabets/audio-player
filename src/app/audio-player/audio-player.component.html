@@ -1,5 +1,8 @@
 <section class="container-player container-audio-list">
-  <app-audio-list [songId]="songId"></app-audio-list>
+  <app-audio-list
+    [songs]="songs"
+    [songId]="songId"
+  ></app-audio-list>
 </section>
 
 <section class="container-player container-audio-player" *ngIf="audioPlaying.song">
