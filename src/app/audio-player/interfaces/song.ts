@@ -5,5 +5,4 @@ export interface Song {
   artistName: string;
   previewUrl?: string;
   src?: string;
-  additionalSetting?: string;
 }
