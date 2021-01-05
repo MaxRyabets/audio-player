@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { AudioPlaying } from '../interfaces/audio-playing';
 import { PlayingSong } from '../interfaces/playing-song';
 import { StorageInterface } from '../interfaces/storage.interface';
 import { BROWSER_STORAGE } from '../storage-injection-token';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -19,12 +20,24 @@ export class AudioPlayingService {
     },
   };
 
-  audioPlaying =
+  private audioPlaying =
     this.storage.getItem('audioPlaying') !== null
       ? this.setAudioPlaying()
       : this.defaultAudioPlaying;
 
   currentAudioPlaying$ = new BehaviorSubject(this.audioPlaying);
+
+  getCurrentAudioPlaying(): Observable<AudioPlaying> {
+    return this.currentAudioPlaying$.asObservable();
+  }
+
+  isAudioPlaying(): Observable<boolean> {
+    return this.getCurrentAudioPlaying().pipe(
+      map((audioPlaying: AudioPlaying) => {
+        return audioPlaying.hasOwnProperty('song');
+      })
+    );
+  }
 
   private setAudioPlaying(): AudioPlaying {
     const currentPlayingSong: PlayingSong = JSON.parse(

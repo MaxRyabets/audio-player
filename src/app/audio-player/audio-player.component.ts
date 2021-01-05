@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
   OnInit,
 } from '@angular/core';
 import { AudioPlayingService } from './services/audio-playing.service';
-import { takeUntil, tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AudioPlaying } from './interfaces/audio-playing';
 import { Song } from './interfaces/song';
 import { AudioPlayerService } from './services/audio-player.service';
@@ -18,10 +16,10 @@ import { AudioPlayerService } from './services/audio-player.service';
   styleUrls: ['./audio-player.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AudioPlayerComponent implements OnInit, OnDestroy {
-  private readonly destroy$ = new Subject();
+export class AudioPlayerComponent implements OnInit {
+  isAudioPlaying$: Observable<boolean>;
 
-  audioPlaying: AudioPlaying;
+  audioPlaying$: Observable<AudioPlaying>;
   songs$: Observable<Song[]>;
   songId: number;
 
@@ -34,15 +32,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setSongs();
     this.setAudioPlaying();
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  private setSongs(): void {
-    this.songs$ = this.audioService.getITunesSongs();
+    this.setIsAudioPlaying();
   }
 
   setNextSong(id: number): void {
@@ -53,20 +43,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.songId = id;
   }
 
-  isHasPropertySong(): boolean {
-    return this.audioPlaying.hasOwnProperty('song');
+  setIsAudioPlaying(): void {
+    this.isAudioPlaying$ = this.audioPlayingService.isAudioPlaying();
+  }
+
+  private setSongs(): void {
+    this.songs$ = this.audioService.getITunesSongs();
   }
 
   private setAudioPlaying(): void {
-    this.audioPlayingService.currentAudioPlaying$
-      .asObservable()
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((audioPlaying) => {
-          this.audioPlaying = audioPlaying;
-          this.changeDetectorRef.detectChanges();
-        })
-      )
-      .subscribe();
+    this.audioPlaying$ = this.audioPlayingService.getCurrentAudioPlaying();
   }
 }
