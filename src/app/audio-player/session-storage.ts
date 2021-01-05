@@ -1,6 +1,6 @@
-import { StorageFactory } from './interfaces/storage-factory';
+import { StorageInterface } from './interfaces/storage.interface';
 
-export class SessionStorage implements StorageFactory {
+export class SessionStorage implements StorageInterface {
   clear(): void {
     sessionStorage.clear();
   }
@@ -9,7 +9,7 @@ export class SessionStorage implements StorageFactory {
     return sessionStorage.getItem(key);
   }
 
-  getLength(): number {
+  length(): number {
     return sessionStorage.length;
   }
 

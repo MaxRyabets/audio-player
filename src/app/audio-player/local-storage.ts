@@ -1,6 +1,6 @@
-import { StorageFactory } from './interfaces/storage-factory';
+import { StorageInterface } from './interfaces/storage.interface';
 
-export class LocalStorage implements StorageFactory {
+export class LocalStorage implements StorageInterface {
   clear(): void {
     localStorage.clear();
   }
@@ -9,7 +9,7 @@ export class LocalStorage implements StorageFactory {
     return localStorage.getItem(key);
   }
 
-  getLength(): number {
+  length(): number {
     return localStorage.length;
   }
 
