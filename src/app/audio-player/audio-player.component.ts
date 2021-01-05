@@ -48,7 +48,7 @@ export class AudioPlayerComponent implements OnInit {
   }
 
   private setSongs(): void {
-    this.songs$ = this.audioService.getITunesSongs();
+    this.songs$ = this.audioService.getSongs();
   }
 
   private setAudioPlaying(): void {

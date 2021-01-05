@@ -22,7 +22,7 @@ export class AudioPlayerService {
     private songAdapterService: SongAdapterService
   ) {}
 
-  getITunesSongs(): Observable<SongModel[]> {
+  getSongs(): Observable<SongModel[]> {
     return this.http.get<SongsResults>(environment.itunesUrl).pipe(
       map((songs: SongsResults) => songs.results.slice(1, this.countSongs)),
       map((songs: any[]) =>
