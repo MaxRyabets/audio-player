@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { AudioPlayingService } from './services/audio-playing.service';
 import { takeUntil, tap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AudioPlaying } from './interfaces/audio-playing';
 import { Song } from './interfaces/song';
 import { AudioPlayerService } from './services/audio-player.service';
@@ -22,8 +22,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
   audioPlaying: AudioPlaying;
-  songs: Song[] = [];
-  songId;
+  songs$: Observable<Song[]>;
+  songId: number;
 
   constructor(
     private audioService: AudioPlayerService,
@@ -32,7 +32,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.getSongs();
+    this.setSongs();
     this.setAudioPlaying();
   }
 
@@ -41,24 +41,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private getSongs(): void {
-    this.audioService
-      .getITunesSongs()
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((songs) => {
-          this.songs = songs;
-          this.changeDetectorRef.detectChanges();
-        })
-      )
-      .subscribe();
+  private setSongs(): void {
+    this.songs$ = this.audioService.getITunesSongs();
   }
 
-  nextSong(id: number): void {
+  setNextSong(id: number): void {
     this.songId = id;
   }
 
-  prevSong(id): void {
+  setPrevSong(id: number): void {
     this.songId = id;
   }
 

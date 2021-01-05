@@ -1,6 +1,6 @@
-<section class="container-player container-audio-list" *ngIf="songs.length">
+<section class="container-player container-audio-list">
   <app-audio-list
-    [songs]="songs"
+    [songs]="songs$ | async"
     [songId]="songId"
     [audioPlaying]="audioPlaying"
   ></app-audio-list>
@@ -9,8 +9,8 @@
 <section class="container-player container-audio-player" *ngIf="isHasPropertySong()">
   <app-audio-players-controls
     [audioPlaying]="audioPlaying"
-    (emitNextSong)="nextSong($event)"
-    (emitPrevSong)="prevSong($event)"
+    (emitNextSong)="setNextSong($event)"
+    (emitPrevSong)="setPrevSong($event)"
   ></app-audio-players-controls>
 </section>
 
