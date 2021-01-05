@@ -20,7 +20,7 @@ export class AudioPlayingService {
 
   private audioPlaying =
     this.storage.getItem('audioPlaying') !== null
-      ? this.setAudioPlaying()
+      ? this.getAudioPlaying()
       : this.defaultAudioPlaying;
 
   currentAudioPlaying$ = new BehaviorSubject(this.audioPlaying);
@@ -39,7 +39,7 @@ export class AudioPlayingService {
     );
   }
 
-  private setAudioPlaying(): AudioPlaying {
+  private getAudioPlaying(): AudioPlaying {
     const currentPlayingSong: PlayingSong = JSON.parse(
       this.storage.getItem('audioPlaying')
     );
