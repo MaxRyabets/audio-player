@@ -16,8 +16,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { Timestamp } from './timestamp';
 import { AudioPlayingService } from '../services/audio-playing.service';
 import { AudioPlaying } from '../interfaces/audio-playing';
-import { StorageInterface } from '../interfaces/storage.interface';
-import { BROWSER_STORAGE } from '../storage-injection-token';
+import { APP_CONFIG_STORAGE } from '../../app.congif';
 import { PlayingSong } from '../interfaces/playing-song';
 
 @Component({
@@ -74,7 +73,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private audioPlayingService: AudioPlayingService,
-    @Inject(BROWSER_STORAGE) private storage: StorageInterface
+    @Inject(APP_CONFIG_STORAGE) private config
   ) {}
 
   nextSong(): void {
@@ -174,7 +173,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
         this.setSavePlay();
 
-        if (this.storage.length()) {
+        if (this.config.storage.length()) {
           this.updateTimeLineFromStorage();
         }
 
@@ -261,11 +260,14 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       timeStamp: this.audio.currentTime,
     };
 
-    this.storage.setItem('audioPlaying', JSON.stringify(currentlyPlayingSong));
+    this.config.storage.setItem(
+      'audioPlaying',
+      JSON.stringify(currentlyPlayingSong)
+    );
   }
 
   private play(): void {
-    if (this.storage.length()) {
+    if (this.config.storage.length()) {
       this.updateTimeLineFromStorage();
     }
 
@@ -286,7 +288,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
   private updateTimeLineFromStorage(): void {
     const currentPlayingSong: PlayingSong = JSON.parse(
-      this.storage.getItem('audioPlaying')
+      this.config.storage.getItem('audioPlaying')
     );
 
     this.audio.currentTime = currentPlayingSong.timeStamp;
