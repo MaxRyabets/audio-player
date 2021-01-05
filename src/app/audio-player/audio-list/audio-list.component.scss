@@ -6,77 +6,74 @@
     justify-content: center;
   }
 
-  .swiper-container {
-    width: 90%;
+  .audio-list-title {
+    margin-top: 0;
+    margin-bottom: 30px;
+  }
 
-    .audio-list-title {
-      margin-top: 0;
-      margin-bottom: 30px;
+  .song {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 240px;
+
+    .active-image {
+      background: red;
     }
 
-    .song {
+    .inactive-image {
+      background: #2B3244;
+    }
+
+    .active-playing {
+      background: #0dae0d;
+    }
+
+    .audio-image {
+      width: 100%;
+      height: 65%;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      height: 240px;
+    }
 
-      .active-image {
-        background: red;
-      }
+    .wrapper-audio-description {
+      width: 100%;
+      height: 35%;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
 
-      .inactive-image {
-        background: #2B3244;
-      }
-
-      .active-playing {
-        background: #0dae0d;
-      }
-
-      .audio-image {
-        width: 100%;
-        height: 65%;
+      .audio-description {
         display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+        flex-direction: column;
+        font-size: 12px;
 
-      .wrapper-audio-description {
-        width: 100%;
-        height: 35%;
-        margin-top: 15px;
-        display: flex;
-        justify-content: space-between;
-
-        .audio-description {
-          display: flex;
-          flex-direction: column;
-          font-size: 12px;
-
-          .name-of-music {
-            font-weight: bold;
-          }
-
-          .artist-name {
-            margin-top: 10px;
-            width: 100px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
+        .name-of-music {
+          font-weight: bold;
         }
 
-        .btn-other-controls {
-          height: 18px;
-          width: 4px;
+        .artist-name {
+          margin-top: 10px;
+          width: 100px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
 
-          img {
-            width: 100%;
-            height: 100%;
-          }
+      .btn-other-controls {
+        height: 18px;
+        width: 4px;
+
+        img {
+          width: 100%;
+          height: 100%;
         }
       }
     }
   }
+
 
   .swiper-button-next,
   .swiper-button-prev {
@@ -84,7 +81,7 @@
     width: 10px;
     height: 10px;
     opacity: unset;
-    top: 150px;
+    top: 180px;
 
     &:hover {
       filter: brightness(0) invert(1);

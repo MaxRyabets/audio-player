@@ -6,7 +6,6 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit,
 } from '@angular/core';
 import { Song } from '../interfaces/song';
 import SwiperCore, { Navigation, Pagination } from 'swiper/core';
@@ -22,13 +21,13 @@ import { AudioPlaying } from '../interfaces/audio-playing';
   styleUrls: ['./audio-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AudioListComponent implements AfterViewInit, OnDestroy {
   private readonly destroy$ = new Subject();
   private localAudioPlaying: AudioPlaying;
 
   private isPause = false;
 
-  private swiper: Swiper;
+  swiper: Swiper;
 
   @Input() songs: Song[];
 
@@ -59,10 +58,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     private changeDetectorRef: ChangeDetectorRef
   ) {
     SwiperCore.use([Navigation, Pagination]);
-  }
-
-  ngOnInit(): void {
-    this.initSwiper();
   }
 
   ngAfterViewInit(): void {
@@ -113,47 +108,6 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
-  }
-
-  initSwiper(): void {
-    this.swiper = new Swiper(
-      this.elementRef.nativeElement.querySelector('.swiper-container'),
-      {
-        loop: true,
-        observer: true,
-        slidesPerView: 1,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-          576: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 20,
-          },
-          992: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-          },
-          1199: {
-            slidesPerView: 4,
-            spaceBetween: 30,
-          },
-          1200: {
-            slidesPerView: 5,
-            spaceBetween: 30,
-          },
-        },
-      }
-    );
   }
 
   isActiveSong(songIndex: number): string {
@@ -224,5 +178,9 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.swiper.slideToLoop(songId);
+  }
+
+  getSwiper(swiper: Swiper): void {
+    this.swiper = swiper;
   }
 }

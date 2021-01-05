@@ -7,6 +7,7 @@ import { AudioListComponent } from './audio-player/audio-list/audio-list.compone
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
+import { SliderComponent } from './audio-player/audio-list/slider/slider.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { AudioPlayerComponent } from './audio-player/audio-player.component';
     AudioPlayerComponent,
     AudioPlayerControlsComponent,
     AudioListComponent,
+    SliderComponent,
   ],
   imports: [BrowserModule, CommonModule, HttpClientModule],
   providers: [],

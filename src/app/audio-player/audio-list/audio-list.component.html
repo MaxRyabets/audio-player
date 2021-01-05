@@ -4,36 +4,32 @@
     <h3>Surprise Me</h3>
   </div>
 
-  <div class="swiper-container">
-    <div class="swiper-wrapper">
-        <div class="song swiper-slide"
-             *ngFor="let song of songs; index as i;
-             trackBy: trackByFn"
-        >
-          <div [ngClass]="isActiveSong(i)" class="audio-image">
-            <button class="btn btn-play" (click)="onClickSong(i, song)">
-              <img *ngIf="!isClickedSong(i)" src="/assets/images/audio-list/btn-play.svg" alt="play">
-              <img *ngIf="isClickedSong(i)" src="/assets/images/audio-list/btn-pause.svg" alt="pause">
-            </button>
-          </div>
-
-          <div class="wrapper-audio-description">
-            <div class="audio-description">
-              <span class="name-of-music">{{song.trackName}} <span *ngIf="!song.trackName">Default</span></span>
-              <span class="artist-name">{{song.artistName}}</span>
-            </div>
-            <button class="btn btn-other-controls">
-              <img src="../../../assets/images/audio-list/other-controls.svg" alt="other-controls">
-            </button>
-          </div>
+  <app-slider (emitSwiper)="getSwiper($event)">
+    <div class="song swiper-slide"
+         *ngFor="let song of songs; index as i;
+         trackBy: trackByFn"
+    >
+      <div [ngClass]="isActiveSong(i)" class="audio-image">
+        <button class="btn btn-play" (click)="onClickSong(i, song)">
+          <img *ngIf="!isClickedSong(i)" src="/assets/images/audio-list/btn-play.svg" alt="play">
+          <img *ngIf="isClickedSong(i)" src="/assets/images/audio-list/btn-pause.svg" alt="pause">
+        </button>
+      </div>
+      <div class="wrapper-audio-description">
+        <div class="audio-description">
+          <span class="name-of-music">{{song.trackName}} <span *ngIf="!song.trackName">Default</span></span>
+          <span class="artist-name">{{song.artistName}}</span>
         </div>
+        <button class="btn btn-other-controls">
+          <img src="../../../assets/images/audio-list/other-controls.svg" alt="other-controls">
+        </button>
+      </div>
     </div>
-  </div>
+  </app-slider>
 
   <div class="container-pagination">
     <div class="swiper-pagination"></div>
   </div>
-
   <div class="swiper-button-prev"></div>
   <div class="swiper-button-next"></div>
 </section>
