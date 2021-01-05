@@ -115,6 +115,7 @@ export class AudioListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
   }
 
+  // todo: separate swiper from audio list component
   initSwiper(): void {
     this.swiper = new Swiper(
       this.elementRef.nativeElement.querySelector('.swiper-container'),

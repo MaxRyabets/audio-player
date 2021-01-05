@@ -22,12 +22,17 @@ export class AudioPlayerService {
     private songAdapterService: SongAdapterService
   ) {}
 
+  // todo: maybe this method should be named getSongs?
   getITunesSongs(): Observable<SongModel[]> {
     return this.http.get<SongsResults>(environment.itunesUrl).pipe(
+      // todo: maybe this should be in adapter?
       map((songs: SongsResults) => songs.results.slice(1, this.countSongs)),
+      // fixme: you know songs type here, it is not any
+      // todo: maybe this part of code should be in adapter?
       map((songs: any[]) =>
         songs.filter((song) => song.hasOwnProperty('previewUrl'))
       ),
+      // fixme: you know songs type here, it is not any
       map((songs: any[]) =>
         songs.map((song) => this.songAdapterService.adapt(song))
       )

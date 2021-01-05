@@ -11,6 +11,7 @@ import { BROWSER_STORAGE } from '../storage-injection-token';
 export class AudioPlayingService {
   constructor(@Inject(BROWSER_STORAGE) private storage: StorageInterface) {}
 
+  // todo: move property initialization above constructor
   private readonly defaultAudioPlaying: AudioPlaying = {
     idList: 0,
     playPause: {
@@ -26,9 +27,10 @@ export class AudioPlayingService {
 
   currentAudioPlaying$ = new BehaviorSubject(this.audioPlaying);
 
+  // todo: implement better name for method
   private setAudioPlaying(): AudioPlaying {
     const currentPlayingSong: PlayingSong = JSON.parse(
-      this.storage.getItem('audioPlaying')
+      this.storage.getItem('audioPlaying') // todo: what will be if audioPlaying key is absent in storage?
     );
 
     return {

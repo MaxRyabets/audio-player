@@ -23,6 +23,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   audioPlaying: AudioPlaying;
   songs: Song[] = [];
+  // fixme: what is the type of songId
   songId;
 
   constructor(
@@ -41,6 +42,8 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // todo: rename method, get - should return something
+  // todo: do you really need method for this action?
   private getSongs(): void {
     this.audioService
       .getITunesSongs()
@@ -54,10 +57,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  // todo: it looks like set song id method
   nextSong(id: number): void {
     this.songId = id;
   }
 
+  // todo: what is the type of id?
+  // todo: it looks like set song id method
   prevSong(id): void {
     this.songId = id;
   }
@@ -66,9 +72,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     return this.audioPlaying.hasOwnProperty('song');
   }
 
+  // todo: do you really need method for this action?
   private setAudioPlaying(): void {
-    this.audioPlayingService.currentAudioPlaying$
-      .asObservable()
+    this.audioPlayingService.currentAudioPlaying$.asObservable() // todo: maybe you should encapsulate this part in service?
       .pipe(
         takeUntil(this.destroy$),
         tap((audioPlaying) => {

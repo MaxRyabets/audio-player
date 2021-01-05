@@ -5,5 +5,6 @@ export interface Song {
   artistName: string;
   previewUrl?: string;
   src?: string;
+  // todo: do you need this option?
   additionalSetting?: string;
 }
