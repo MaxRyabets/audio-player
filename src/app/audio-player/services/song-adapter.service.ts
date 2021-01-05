@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { SongAdapter } from '../interfaces/song-adapter';
 import { SongModel } from '../interfaces/song-model';
 import { Song } from '../interfaces/song';
-import { map } from 'rxjs/operators';
 import { SongsResults } from '../interfaces/songs-results';
 
 @Injectable({
