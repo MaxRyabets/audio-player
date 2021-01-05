@@ -10,8 +10,6 @@ import { map, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AudioPlayingService {
-  constructor(@Inject(BROWSER_STORAGE) private storage: StorageInterface) {}
-
   private readonly defaultAudioPlaying: AudioPlaying = {
     idList: 0,
     playPause: {
@@ -26,6 +24,8 @@ export class AudioPlayingService {
       : this.defaultAudioPlaying;
 
   currentAudioPlaying$ = new BehaviorSubject(this.audioPlaying);
+
+  constructor(@Inject(BROWSER_STORAGE) private storage: StorageInterface) {}
 
   getCurrentAudioPlaying(): Observable<AudioPlaying> {
     return this.currentAudioPlaying$.asObservable();
