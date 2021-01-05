@@ -5,11 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { SongAdapterService } from './song-adapter.service';
-import { SongModel } from '../song.model';
-
-interface SongsResults {
-  results: Song[];
-}
+import { SongModel } from '../interfaces/song-model';
+import { SongsResults } from '../interfaces/songs-results';
 
 @Injectable({
   providedIn: 'root',
@@ -24,11 +21,10 @@ export class AudioPlayerService {
 
   getSongs(): Observable<SongModel[]> {
     return this.http.get<SongsResults>(environment.itunesUrl).pipe(
-      map((songs: SongsResults) => songs.results.slice(1, this.countSongs)),
-      map((songs: any[]) =>
-        songs.filter((song) => song.hasOwnProperty('previewUrl'))
+      map((songs: SongsResults) =>
+        this.songAdapterService.prepareSongs(songs, this.countSongs)
       ),
-      map((songs: any[]) =>
+      map((songs: Song[]) =>
         songs.map((song) => this.songAdapterService.adapt(song))
       )
     );
