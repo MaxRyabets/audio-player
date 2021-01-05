@@ -174,7 +174,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
 
         this.setSavePlay();
 
-        if (this.storage.getLength()) {
+        if (this.storage.length()) {
           this.updateTimeLineFromStorage();
         }
 
@@ -265,7 +265,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
   }
 
   private play(): void {
-    if (this.storage.getLength()) {
+    if (this.storage.length()) {
       this.updateTimeLineFromStorage();
     }
 
