@@ -8,7 +8,6 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { Song } from '../interfaces/song';
-import SwiperCore, { Navigation, Pagination } from 'swiper/core';
 import Swiper from 'swiper';
 import { fromEvent, Subject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
@@ -56,9 +55,7 @@ export class AudioListComponent implements AfterViewInit, OnDestroy {
     private elementRef: ElementRef,
     private audioPlayingService: AudioPlayingService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {
-    SwiperCore.use([Navigation, Pagination]);
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     fromEvent(window, 'resize')

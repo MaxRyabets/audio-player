@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AudioPlayingService } from './services/audio-playing.service';
 import { Observable } from 'rxjs';
 import { AudioPlaying } from './interfaces/audio-playing';
@@ -25,7 +20,6 @@ export class AudioPlayerComponent implements OnInit {
 
   constructor(
     private audioService: AudioPlayerService,
-    private changeDetectorRef: ChangeDetectorRef,
     private audioPlayingService: AudioPlayingService
   ) {}
 

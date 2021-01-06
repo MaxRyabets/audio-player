@@ -1,6 +1,6 @@
-<section class="container-player container-audio-list">
+<section class="container-player container-audio-list" *ngIf="songs$ | async as songs">
   <app-audio-list
-    [songs]="songs$ | async"
+    [songs]="songs"
     [songId]="songId"
     [audioPlaying]="audioPlaying$ | async"
   ></app-audio-list>

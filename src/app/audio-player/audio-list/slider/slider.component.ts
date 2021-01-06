@@ -1,12 +1,13 @@
 import {
-  Component,
-  OnInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
+  Component,
   ElementRef,
-  Output,
   EventEmitter,
+  Output,
 } from '@angular/core';
 import Swiper from 'swiper';
+import SwiperCore, { Navigation, Pagination } from 'swiper';
 
 @Component({
   selector: 'app-slider',
@@ -14,11 +15,14 @@ import Swiper from 'swiper';
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SliderComponent implements OnInit {
+export class SliderComponent implements AfterViewInit {
   @Output() emitSwiper = new EventEmitter<Swiper>();
-  constructor(private elementRef: ElementRef) {}
 
-  ngOnInit(): void {
+  constructor(private elementRef: ElementRef) {
+    SwiperCore.use([Navigation, Pagination]);
+  }
+
+  ngAfterViewInit(): void {
     this.initSwiper();
   }
 
