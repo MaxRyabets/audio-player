@@ -1,4 +1,5 @@
-export interface StatePlayPause {
-  isPause?: boolean;
-  isPlaying?: boolean;
+export enum PlayPausePlayed {
+  Pause = 'Pause',
+  Play = 'Play',
+  Played = 'Played',
 }

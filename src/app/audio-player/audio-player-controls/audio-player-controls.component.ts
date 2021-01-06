@@ -18,6 +18,7 @@ import { AudioPlayingService } from '../services/audio-playing.service';
 import { AudioPlaying } from '../interfaces/audio-playing';
 import { APP_CONFIG_STORAGE } from '../../app.config';
 import { PlayingSong } from '../interfaces/playing-song';
+import { PlayPausePlayed } from '../interfaces/state-play-pause';
 
 @Component({
   selector: 'app-audio-players-controls',
@@ -130,7 +131,7 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
           this.audio.currentTime
         );
 
-        if (this.audioPlaying.playPause.isPlaying) {
+        if (this.audioPlaying.playPause === PlayPausePlayed.Played) {
           return;
         }
 
@@ -271,15 +272,11 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
       this.updateTimeLineFromStorage();
     }
 
-    const isPlaying = false;
-    const isPause = this.audio.paused;
-
     const audioPlaying: AudioPlaying = {
       ...this.audioPlaying,
-      playPause: {
-        isPause,
-        isPlaying,
-      },
+      playPause: this.audio.paused
+        ? PlayPausePlayed.Play
+        : PlayPausePlayed.Pause,
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);

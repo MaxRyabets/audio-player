@@ -13,6 +13,7 @@ import { fromEvent, Subject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { AudioPlayingService } from '../services/audio-playing.service';
 import { AudioPlaying } from '../interfaces/audio-playing';
+import { PlayPausePlayed } from '../interfaces/state-play-pause';
 
 @Component({
   selector: 'app-audio-list',
@@ -36,7 +37,10 @@ export class AudioListComponent implements AfterViewInit, OnDestroy {
 
   @Input() set audioPlaying(audioPlaying: AudioPlaying) {
     this.localAudioPlaying = audioPlaying;
-    this.isPause = audioPlaying.playPause.isPause;
+
+    this.isPause =
+      audioPlaying.playPause !== PlayPausePlayed.Pause &&
+      audioPlaying.playPause !== PlayPausePlayed.Played;
 
     this.changeDetectorRef.detectChanges();
   }
@@ -77,13 +81,7 @@ export class AudioListComponent implements AfterViewInit, OnDestroy {
   }
 
   onClickSong(id: number, song: Song): void {
-    let isPlaying = this.audioPlaying.playPause.isPlaying;
-
-    if (this.audioPlaying.playPause.isPlaying) {
-      isPlaying = false;
-    }
-
-    let isPause = this.audioPlaying.playPause.isPause;
+    let isPause = this.audioPlaying.playPause === PlayPausePlayed.Play;
 
     if (
       this.audioPlaying.hasOwnProperty('song') &&
@@ -98,10 +96,7 @@ export class AudioListComponent implements AfterViewInit, OnDestroy {
         id,
         ...song,
       },
-      playPause: {
-        isPause: !isPause,
-        isPlaying,
-      },
+      playPause: !isPause ? PlayPausePlayed.Play : PlayPausePlayed.Pause,
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);
@@ -114,7 +109,7 @@ export class AudioListComponent implements AfterViewInit, OnDestroy {
 
     if (
       this.audioPlaying.song.id === songIndex &&
-      this.audioPlaying.playPause.isPlaying
+      this.audioPlaying.playPause === PlayPausePlayed.Played
     ) {
       return 'active-playing';
     }
@@ -153,9 +148,7 @@ export class AudioListComponent implements AfterViewInit, OnDestroy {
         id,
         ...song,
       },
-      playPause: {
-        isPause: true,
-      },
+      playPause: PlayPausePlayed.Play,
     };
 
     this.audioPlayingService.currentAudioPlaying$.next(audioPlaying);

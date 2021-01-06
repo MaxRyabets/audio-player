@@ -4,6 +4,7 @@ import { AudioPlaying } from '../interfaces/audio-playing';
 import { PlayingSong } from '../interfaces/playing-song';
 import { map } from 'rxjs/operators';
 import { APP_CONFIG_STORAGE } from '../../app.config';
+import { PlayPausePlayed } from '../interfaces/state-play-pause';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +12,7 @@ import { APP_CONFIG_STORAGE } from '../../app.config';
 export class AudioPlayingService {
   private readonly defaultAudioPlaying: AudioPlaying = {
     idList: 0,
-    playPause: {
-      isPause: false,
-      isPlaying: false,
-    },
+    playPause: PlayPausePlayed.Pause,
   };
 
   private audioPlaying =
@@ -31,11 +29,13 @@ export class AudioPlayingService {
   }
 
   isAudioPlaying(): Observable<boolean> {
-    return this.getCurrentAudioPlaying().pipe(
-      map((audioPlaying: AudioPlaying) => {
-        return audioPlaying.hasOwnProperty('song');
-      })
-    );
+    if (PlayPausePlayed.Pause) {
+      return this.getCurrentAudioPlaying().pipe(
+        map((audioPlaying: AudioPlaying) => {
+          return audioPlaying.hasOwnProperty('song');
+        })
+      );
+    }
   }
 
   private getAudioPlaying(): AudioPlaying {
@@ -46,10 +46,7 @@ export class AudioPlayingService {
     return {
       idList: currentPlayingSong.idList,
       song: currentPlayingSong.song,
-      playPause: {
-        isPause: false,
-        isPlaying: true,
-      },
+      playPause: PlayPausePlayed.Played,
       timestamp: currentPlayingSong.timeStamp,
     };
   }
