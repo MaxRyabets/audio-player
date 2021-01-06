@@ -16,7 +16,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { Timestamp } from './timestamp';
 import { AudioPlayingService } from '../services/audio-playing.service';
 import { AudioPlaying } from '../interfaces/audio-playing';
-import { APP_CONFIG_STORAGE } from '../../app.congif';
+import { APP_CONFIG_STORAGE } from '../../app.config';
 import { PlayingSong } from '../interfaces/playing-song';
 
 @Component({

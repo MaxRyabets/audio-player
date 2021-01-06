@@ -8,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { SliderComponent } from './audio-player/audio-list/slider/slider.component';
-import { APP_CONFIG_STORAGE, STORAGE_CONFIG } from './app.congif';
+import { APP_CONFIG_STORAGE, STORAGE_CONFIG } from './app.config';
 
 @NgModule({
   declarations: [

@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AudioPlaying } from '../interfaces/audio-playing';
 import { PlayingSong } from '../interfaces/playing-song';
 import { map } from 'rxjs/operators';
-import { APP_CONFIG_STORAGE } from '../../app.congif';
+import { APP_CONFIG_STORAGE } from '../../app.config';
 
 @Injectable({
   providedIn: 'root',
