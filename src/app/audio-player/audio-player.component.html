@@ -6,8 +6,9 @@
   ></app-audio-list>
 </section>
 
-<section class="container-player container-audio-player" *ngIf="isAudioPlaying$ | async">
+<section class="container-player container-audio-player" *ngIf="isAudioPlaying$ | async as isAudioPlaying">
   <app-audio-players-controls
+    *ngIf="isAudioPlaying"
     [audioPlaying]="audioPlaying$ | async"
     (emitNextSong)="setNextSong($event)"
     (emitPrevSong)="setPrevSong($event)"
