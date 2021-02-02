@@ -199,17 +199,17 @@ export class AudioPlayerControlsComponent implements AfterViewInit, OnDestroy {
           return;
         }
 
-        const currentAudioPlaybackTime = Math.floor(
+        const percentCurrentTime = Math.floor(
           (100 / this.audio.duration) * this.audio.currentTime
         );
 
-        if (isNaN(currentAudioPlaybackTime)) {
+        if (isNaN(percentCurrentTime)) {
           return;
         }
 
         this.setSavePlay();
 
-        this.progressBarValue = currentAudioPlaybackTime;
+        this.progressBarValue = percentCurrentTime;
         this.currentTimeElement.textContent = this.convertDuration(
           this.audio.currentTime
         );
